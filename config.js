@@ -75,10 +75,11 @@ define([
     }
 
     // mongoose connect link
+    //{ user: "", account: "" }
     var mongooseLinks = {
         default: 'mongodb://localhost/oglen-db',
         development: 'mongodb://localhost/oglen-db',
-        production: 'mongodb://localhost/oglen-db'
+        production: 'mongodb://heroku_app33706267:heroku_app33706267@ds041561.mongolab.com:41561/heroku_app33706267'
     };
 
     function mongooseLink() {
