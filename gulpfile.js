@@ -4,7 +4,7 @@
  */
 
 var gulp = require('gulp'),
-    gutil = require('gulp-util'),
+    util = require('gulp-util'),
     bower = require('gulp-bower'),
     concat = require('gulp-concat'),
     clean = require('gulp-clean'),
@@ -41,7 +41,7 @@ gulp.task('develop', function () {
         nodeArgs: ['--debug'],
         ignore: ['ignored.js']
     }).on('restart', function () {
-        gutil.log(gutil.colors.cyan('nodemon restarted'));
+        util.log(util.colors.cyan('nodemon restarted'));
     }).on('end', done);
 });
 
@@ -61,6 +61,9 @@ gulp.task('minify-css', function (done) {
         }))
         .pipe(gulp.dest('./dist/css/'))
         .on('end', done);
+});
+
+gulp.task('hooks', function (done) {
 });
 
 gulp.task('clean', function (done) {
