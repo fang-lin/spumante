@@ -53,7 +53,7 @@ require('requirejs')([
     app.listen(port);
     logger.info('Http server listening on port ' + port);
 
-    //var mongooseLink = config.mongooseLink;
-    //mongoose.connect(mongooseLink);
-    //logger.info('Mongoose connect to ' + mongooseLink);
+    var mongooseLink = config.mongooseLink;
+    mongoose.connect(mongooseLink);
+    logger.info('Mongoose connect to ' + mongooseLink);
 });

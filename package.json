@@ -21,22 +21,35 @@
     "nodejs",
     "monogdb"
   ],
-  "author": "fanglin",
-  "license": "ISC",
+  "author": "fanglin.name@gmail.com",
   "bugs": {
     "url": "https://github.com/oglen/spumante/issues"
   },
   "homepage": "https://github.com/oglen/spumante",
   "dependencies": {
     "body-parser": "^1.11.0",
+    "bower": "^1.3.12",
     "compression": "^1.4.0",
     "errorhandler": "^1.3.3",
     "express": "^4.11.2",
+    "gulp": "^3.8.10",
+    "gulp-bower": "0.0.10",
+    "gulp-clean": "^0.3.1",
+    "gulp-concat": "^2.4.3",
+    "gulp-jshint": "^1.9.2",
+    "gulp-less": "^2.0.1",
+    "gulp-minify-css": "^0.4.4",
+    "gulp-nodemon": "^1.0.5",
+    "gulp-rename": "^1.2.0",
+    "gulp-util": "^3.0.3",
+    "jshint-stylish": "^1.0.0",
     "log4js": "^0.6.22",
     "mongoose": "^3.8.22",
     "morgan": "^1.5.1",
+    "path": "^0.11.14",
     "requirejs": "^2.1.15",
     "send": "^0.11.1",
+    "shelljs": "^0.3.0",
     "underscore": "^1.7.0"
   }
 }

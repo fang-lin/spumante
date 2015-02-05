@@ -1,0 +1,35 @@
+{
+  "name": "spumante",
+  "version": "0.1.0",
+  "homepage": "https://github.com/oglen/spumante",
+  "authors": [
+    "fanglin.name@gmail.com"
+  ],
+  "description": "A blog realized with angularjs + nodejs + mongodb",
+  "main": "app.js",
+  "keywords": [
+    "blog",
+    "angularjs",
+    "nodejs",
+    "monogdb"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "client/lib",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.3",
+    "underscore": "~1.7.0",
+    "angular": "~1.3.12",
+    "requirejs": "~2.1.15",
+    "normalize-css": "~3.0.2",
+    "html5shiv": "~3.7.2",
+    "respond": "~1.4.2",
+    "angular-resource": "~1.3.12",
+    "crypto": "~3.46.1"
+  }
+}

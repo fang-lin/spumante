@@ -1,4 +1,5 @@
 {
-    "eqeqeq": true,
-    "quotmark": "single"
+  "sub": true,
+  "eqeqeq": true,
+  "quotmark": "single"
 }

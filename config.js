@@ -65,9 +65,9 @@ define([
 
     // Express listening on port
     var ports = {
-        default: 8080,
-        development: 8000,
-        production: 8080
+        default: 80,
+        development: 8008,
+        production: 80
     };
 
     function port() {
@@ -77,8 +77,8 @@ define([
     // mongoose connect link
     //{ user: "", account: "" }
     var mongooseLinks = {
-        default: 'mongodb://localhost/oglen-db',
-        development: 'mongodb://localhost/oglen-db',
+        default: 'mongodb://localhost/spumante_db',
+        development: 'mongodb://localhost/spumante_db',
         production: 'mongodb://heroku_app33706267:heroku_app33706267@ds041561.mongolab.com:41561/heroku_app33706267'
     };
 
