@@ -1,0 +1,23 @@
+<h2>Role</h2>
+<form name="role-form" ng-submit="submit(role)">
+    <ul>
+        <li>
+            <label for="name">name</label>
+            <br/>
+            <input type="text" id="name" name="name" ng-model="role.name"/>
+        </li>
+        <li>
+            <label for="privilege">privilege</label>
+            <br/>
+            <input type="text" id="privilege" name="privilege" ng-model="role.privilege"/>
+        </li>
+        <li>
+            <label for="note">note</label>
+            <br/>
+            <input type="text" id="note" name="note" ng-model="role.note"/>
+        </li>
+        <li>
+            <input type="submit" id="submit" name="submit" value="submit"/>
+        </li>
+    </ul>
+</form>

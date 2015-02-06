@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Site Information -->
+    <meta name="description" content="{{info.description}}"/>
+    <meta name="keywords" content="{{info.keywords}}"/>
+    <meta name="generator" content="{{info.generator}}"/>
+    <meta name="version" content="{{info.version}}"/>
+    <base href="/blog/"/>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/lib/html5shiv/dist/html5shiv.min.js"></script>
+    <script src="/lib/respond/dest/respond.min.js"></script>
+    <![endif]-->
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="css/main.css"/>
+
+    <title ng-bind="info.title">blog.oglen.net</title>
+</head>
+<body>
+<header id="logo" class="container-fluid">
+    <span ng-bind="info.title"></span>
+</header>
+<div id="menu">
+    <menu menu="menu">loading</menu>
+</div>
+<div ng-view>loading......</div>
+
+<script type="text/javascript" data-main="init" src="/lib/requirejs/require.js"></script>
+</body>
+</html>

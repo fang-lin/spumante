@@ -6,3 +6,5 @@ client/lib
 client/css
 dist/
 tmp/
+
+npm-debug.log

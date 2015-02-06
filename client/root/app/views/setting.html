@@ -1,0 +1,28 @@
+<h2>setting</h2>
+<form name="setting-form" ng-submit="submit(setting)">
+    <ul>
+        <li>
+            <label for="scopes">scopes</label>
+            <br/>
+            <input type="text" id="scopes" name="scopes" ng-model="setting.scopes"/>
+        </li>
+        <li>
+            <label for="key">key</label>
+            <br/>
+            <input type="text" id="key" name="key" ng-model="setting.key"/>
+        </li>
+        <li>
+            <label for="value">value</label>
+            <br/>
+            <input type="text" id="value" name="value" ng-model="setting.value"/>
+        </li>
+        <li>
+            <label for="note">note</label>
+            <br/>
+            <input type="text" id="note" name="note" ng-model="setting.note"/>
+        </li>
+        <li>
+            <input type="submit" id="submit" name="submit" value="submit"/>
+        </li>
+    </ul>
+</form>

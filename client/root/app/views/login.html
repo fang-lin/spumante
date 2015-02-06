@@ -1,0 +1,21 @@
+<h2>Login</h2>
+<form name="login-form" ng-submit="login(credentials)" novalidate>
+    <ul>
+        <li>
+            <label for="username">Username:</label><br/>
+            <input type="text" id="username" name="username" ng-model="credentials.username"/>
+        </li>
+        <li>
+            <label for="password">Password:</label><br/>
+            <input type="password" id="password" name="password" ng-model="credentials.password"/>
+        </li>
+        <li>
+            <label for="memorization">Memorization:</label><br/>
+            <input type="checkbox" id="memorization" name="memorization" ng-model="credentials.memorization"/>
+        </li>
+        <li>
+            <span ng-bind="msg"></span><br/>
+            <button type="submit">Login</button>
+        </li>
+    </ul>
+</form>

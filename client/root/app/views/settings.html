@@ -1,0 +1,19 @@
+<h2>settings</h2>
+<pager skip="skip" limit="limit" count="count" segment="2:3">loading</pager>
+<table>
+    <tr>
+        <th>key</th>
+        <th>value</th>
+        <th>scope</th>
+        <th>note</th>
+        <th>operate</th>
+    </tr>
+    <tr ng-repeat="setting in settings">
+        <td>{{setting.scopes.join(' ')}}</td>
+        <td>{{setting.key}}</td>
+        <td>{{setting.value}}</td>
+        <td>{{setting.note}}</td>
+        <td><a ng-href="#/setting/{{setting._id}}">edit</a> | <a ng-click="delete(setting._id)">delete</a></td>
+        </td>
+    </tr>
+</table>

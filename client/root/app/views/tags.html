@@ -1,0 +1,14 @@
+<h2>Tags</h2>
+<pager skip="skip" limit="limit" count="count" segment="2:3">loading</pager>
+<table>
+    <tr>
+        <th>name</th>
+        <th>count</th>
+        <th>operate</th>
+    </tr>
+    <tr ng-repeat="tag in tags">
+        <td>{{tag.name}}</td>
+        <td>{{tag.count}}</td>
+        <td><a ng-href="#/tag/{{tag._id}}">edit</a> | <a ng-click="delete(tag._id)">delete</a></td>
+    </tr>
+</table>

@@ -1,0 +1,84 @@
+<h2>Post</h2>
+<form name="post-form" ng-submit="submit(post)">
+    <ul>
+        <li>
+            <label for="title">title</label>
+            <br/>
+            <input type="text" id="title" name="title" ng-model="post.title"/>
+        </li>
+        <li>
+            <label for="tags">tags</label>
+            <br/>
+            <ul id="tags">
+                <li ng-repeat="tag in tags">
+                    <label for="tags-{{tag.name}}" ng-bind="tag.name"></label>
+                    <input type="checkbox" name="tags" id="tags-{{tag.name}}" ng-model="post.tags[$index]" ng-true-value="{{tag._id}}"/>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <label for="abstract">abstract</label>
+            <br/>
+            <input type="text" id="abstract" name="abstract" ng-model="post.abstract"/>
+
+        </li>
+        <li>
+            <label for="author">author</label>
+            <br/>
+            <input type="text" id="author" name="author" ng-model="post.author"/>
+
+        </li>
+        <li>
+            <label for="publish">publish</label>
+            <br/>
+            <input type="text" id="publish" name="publish" ng-model="post.publish"/>
+        </li>
+        <li>
+            <label for="hidden">hidden</label>
+            <br/>
+            <input type="text" id="hidden" name="hidden" ng-model="post.hidden"/>
+        </li>
+        <li>
+            <label for="clicks">clicks</label>
+            <br/>
+            <input type="text" id="clicks" name="clicks" ng-model="post.clicks"/>
+        </li>
+        <li>
+            <label for="createAt">createAt</label>
+            <br/>
+            <input type="text" id="createAt" name="createAt" ng-model="post.createAt"/>
+        </li>
+        <li>
+            <label for="draft.saveAt">draft.saveAt</label>
+            <br/>
+            <input type="text" id="draft.saveAt" name="draft.saveAt" ng-model="post.draft.saveAt"/>
+        </li>
+        <li>
+            <label for="draft.text">draft.text</label>
+            <br/>
+            <textarea id="draft.text" name="draft.text" ng-model="post.draft.text"></textarea>
+        </li>
+        <li>
+            <label for="drafts">drafts</label>
+            <br/>
+
+            <div id="drafts" name="drafts">
+                <ul>
+                    <li class="draft" ng-repeat="draft in drafts" ng-bind="draft.saveAt | date:'short'" ng-click="setDraft(draft._id)"></li>
+                </ul>
+            </div>
+        </li>
+        <li>
+            <input type="submit" value="save"/>
+        </li>
+    </ul>
+</form>
+
+
+
+
+
+
+
+
+

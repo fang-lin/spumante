@@ -1,0 +1,5 @@
+<ul class="pagination">
+    <li ng-repeat="page in chain" ng-class="{active: page.skip == skip}">
+        <a ng-href="{{path(page.skip)}}" ng-bind="page.num"></a>
+    </li>
+</ul>

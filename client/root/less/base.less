@@ -1,0 +1,69 @@
+.clear(@dir: both) {
+  content: ' ';
+  display: block;
+  height: 0px;
+  font-size: 0px;
+  line-height: 0px;
+  clear: @dir;
+}
+
+html {
+
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font: 12px/18px  "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
+}
+
+#menu > ul {
+  float: left;
+  width: 140px;
+}
+
+#menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#menu:after {
+  .clear;
+}
+
+.tag {
+  cursor: pointer;
+  display: inline-block;
+  padding: 2px 3px;
+  margin-right: 5px;
+  border: solid 1px #999;
+}
+
+.tag:hover {
+  background: #69f;
+}
+
+#drafts {
+  width: 200px;
+  height: 240px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+.draft {
+  cursor: pointer;
+}
+
+.draft:hover {
+  background: #69f;
+}
+
+table {
+
+}
+
+th, td {
+  padding: 3px;
+  border: solid #999 1px;
+}

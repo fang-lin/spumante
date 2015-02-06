@@ -1,0 +1,30 @@
+<h2>User</h2>
+<form name="user-form" ng-submit="submit(user)">
+    <ul>
+        <li>
+            <label for="username">username</label>
+            <br/>
+            <input type="text" id="username" name="username" ng-model="user.username"/>
+        </li>
+        <li>
+            <label for="email">email</label>
+            <br/>
+            <input type="text" id="email" name="email" ng-model="user.email"/>
+        </li>
+        <li>
+            <label for="password">password</label>
+            <br/>
+            <input type="password" id="password" name="password" ng-model="user.password"/>
+        </li>
+        <li>
+            <label for="role">role</label>
+            <br/>
+            <select name="role" id="role" ng-model="user.role">
+                <option ng-repeat="role in roles" ng-value="role._id" ng-bind="role.name"></option>
+            </select>
+        </li>
+        <li>
+            <input type="submit" id="submit" name="submit" value="submit"/>
+        </li>
+    </ul>
+</form>

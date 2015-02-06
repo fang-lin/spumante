@@ -1,0 +1,55 @@
+<h2>Post</h2>
+<h3 ng-bind="post.title"></h3>
+<span>
+    create at : <time ng-bind="post.createAt | date:format"></time>
+</span>
+<br/>
+<span>
+    update at : <time ng-bind="post.draft.saveAt | date:format"></time>
+</span>
+<br/>
+<span>
+    author : <span ng-bind="post.author.username"></span>
+</span>
+<div>
+    <a ng-repeat="tag in post.tags" ng-href=""><span ng-bind="tag.name"></span></a>
+</div>
+
+<div ng-bind="post.draft.text"></div>
+
+<h2>Comment</h2>
+<form name="comment-form" ng-submit="submit(comment)">
+    <ul>
+        <li>
+            <label for="comment-nickname">nickname</label>
+            <br/>
+            <input type="text" id="comment-nickname" name="comment-nickname" ng-model="comment.nickname"/>
+        </li>
+        <li>
+            <label for="comment-email">email</label>
+            <br/>
+            <input type="text" id="comment-email" name="comment-email" ng-model="comment.email"/>
+        </li>
+        <li>
+            <label for="comment-text">note</label>
+            <br/>
+            <textarea id="comment-text" name="comment-text" ng-model="comment.text" cols="30" rows="5"></textarea>
+        </li>
+        <li>
+            <input type="submit" id="comment-submit" name="submit" value="submit"/>
+        </li>
+    </ul>
+</form>
+<pager skip="skip" limit="limit" count="count" segment="3:4">loading</pager>
+<div id="comments">
+    <ul>
+        <li ng-repeat="comment in comments">
+            <div>
+                <span ng-bind="comment.nickname"></span> at
+                <span ng-bind="comment.createAt | date:format"></span>
+            </div>
+            <div ng-bind="comment.text"></div>
+            <span ng-bind="comment.email"></span>
+        </li>
+    </ul>
+</div>

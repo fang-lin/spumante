@@ -1,0 +1,24 @@
+<h2>Users</h2>
+<pager skip="skip" limit="limit" count="count" segment="2:3">loading</pager>
+<table>
+    <tr>
+        <th>_id</th>
+        <th>username</th>
+        <th>email</th>
+        <th>createAt</th>
+        <th>role.name</th>
+        <th>loginAt</th>
+        <th>clientIp</th>
+        <th>operate</th>
+    </tr>
+    <tr ng-repeat="user in users">
+        <td>{{user._id}}</td>
+        <td>{{user.username}}</td>
+        <td>{{user.email}}</td>
+        <td>{{user.createAt}}</td>
+        <td>{{user.role.name}}</td>
+        <td>{{user.loginAt}}</td>
+        <td>{{user.clientIp}}</td>
+        <td><a ng-href="#/user/{{user._id}}">edit</a> | <a ng-click="delete(user._id)">delete</a></td>
+    </tr>
+</table>

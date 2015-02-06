@@ -56,7 +56,7 @@ define([
     var clientPaths = {
         default: 'client',
         development: 'client',
-        production: 'dist'
+        production: 'dest'
     };
 
     function clientPath() {

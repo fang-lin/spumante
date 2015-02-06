@@ -1,0 +1,7 @@
+<ul class="slide" ng-repeat="item in menu">
+    <li><a ng-href="{{item.url}}">{{item.name}}</a></li>
+    <li ng-if="item.children">
+        <menu menu="item.children"></menu>
+    </li>
+</ul>
+

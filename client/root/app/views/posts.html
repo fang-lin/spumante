@@ -1,0 +1,32 @@
+<h2>Posts</h2>
+<pager skip="skip" limit="limit" count="count" segment="2:3">loading</pager>
+<table>
+    <tr>
+        <th>title</th>
+        <th>createAt</th>
+        <th>saveAt</th>
+        <th>abstract</th>
+        <th>author</th>
+        <th>tags</th>
+        <th>draft</th>
+        <th>hidden</th>
+        <th>publish</th>
+        <th>operate</th>
+    </tr>
+    <tr class="repeated-item" ng-repeat="post in posts">
+        <td>{{post.title}}</td>
+        <td>{{post.createAt | date:'short'}}</td>
+        <td>{{post.draft.saveAt | date:'short'}}</td>
+        <td>{{post.abstract}}</td>
+        <td>{{post.author.username}}</td>
+        <td>
+            <ul>
+                <li ng-repeat="tag in post.tags" ng-bind="tag.name"></li>
+            </ul>
+        </td>
+        <td>{{post.draft.text}}</td>
+        <td>{{post.hidden}}</td>
+        <td>{{post.publish}}</td>
+        <td><a ng-href="#/post/{{post._id}}">edit</a> | <a ng-click="delete(post._id)">delete</a></td>
+    </tr>
+</table>

@@ -1,0 +1,22 @@
+<h2>Comments</h2>
+<pager skip="skip" limit="limit" count="count" segment="2:3">loading</pager>
+<table>
+    <tr>
+        <th>createAt</th>
+        <th>nickname</th>
+        <th>email</th>
+        <th>clientIp</th>
+        <th>post</th>
+        <th>text</th>
+        <th>operate</th>
+    </tr>
+    <tr class="repeated-item" ng-repeat="comment in comments">
+        <td>{{comment.createAt | date:short}}</td>
+        <td>{{comment.nickname}}</td>
+        <td>{{comment.email}}</td>
+        <td>{{comment.clientIp}}</td>
+        <td>{{comment.post.title}}</td>
+        <td>{{comment.text}}</td>
+        <td><a ng-href="#/post/{{comment._id}}">edit</a> | <a ng-click="delete(comment._id)">delete</a></td>
+    </tr>
+</table>
