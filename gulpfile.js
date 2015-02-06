@@ -13,13 +13,14 @@ var gulp = require('gulp'),
     less = require('gulp-less'),
     minifyCss = require('gulp-minify-css'),
     rename = require('gulp-rename'),
+    copy = require('gulp-copy'),
     sh = require('shelljs'),
     path = require('path'),
     _ = require('underscore'),
     fs = require('fs');
 
 
-gulp.task('lint', function () {
+gulp.task('lint', function (done) {
     gulp.src('./client/app/**/*.js')
         .pipe(jshint())
         .pipe(jshint.reporter('jshint-stylish'))
@@ -63,7 +64,10 @@ gulp.task('minify-css', function (done) {
         .on('end', done);
 });
 
-gulp.task('hooks', function (done) {
+gulp.task('git-hook', function (done) {
+    gulp.src('./git-hooks/*')
+        .pipe(gulp.dest('./.git/hooks/'))
+        .on('end', done);
 });
 
 gulp.task('clean', function (done) {
