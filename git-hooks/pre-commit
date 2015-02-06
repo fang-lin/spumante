@@ -3,7 +3,9 @@
 // GULP-GITHOOKS START
 var exec = require('child_process').exec;
 
-exec('gulp lint', function (err, stdout, stderr) {
+exec('gulp lint -s >temp/git_commit.txt', {
+    cwd: 'd:\\projects\\spumante'
+}, function (err, stdout, stderr) {
     console.info(stdout);
     var exitCode = 0;
     if (err) {
