@@ -8,6 +8,6 @@ define([], function () {
 
     var app = {
         name: 'appName'
-    };
+    }
     return app;
 });
