@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
 // GULP-GITHOOKS START
-console.log('>>>>>>>>>>>>>>>>>');
+var exec = require('child_process').exec;
+process.exit(exec);
 // GULP-GITHOOKS END
