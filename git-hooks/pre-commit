@@ -1,0 +1,5 @@
+#!/usr/bin/env node
+
+// GULP-GITHOOKS START
+console.log('asdasasas');
+// GULP-GITHOOKS END
