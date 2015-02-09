@@ -8,10 +8,9 @@ define([
 ], function (mongoose) {
     'use strict';
 
-    var Schema = mongoose.Schema,
-        ObjectId = Schema.Types.ObjectId,
-        Now = Date.now;
-
+    var Schema = mongoose.Schema;
+    var ObjectId = Schema.Types.ObjectId;
+    var Now = Date.now;
     var CommentSchema = new Schema({
         post: {
             type: ObjectId,

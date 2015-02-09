@@ -12,8 +12,9 @@ require('requirejs')([
     'errorhandler', // Create new middleware to handle errors and respond with content negotiation.
     'mongoose', // Elegant mongodb object modeling for node.js.
     'log4js', // Port of Log4js to work with node.
-    'send' // connect's static() file server extracted for general node.js use
-], function (config, express, bodyParser, morgan, compression, errorhandler, mongoose, log4js, send) {
+    'send', // connect's static() file server extracted for general node.js use
+    'server/routers/all'
+], function (config, express, bodyParser, morgan, compression, errorhandler, mongoose, log4js, send, apiRouters) {
     'use strict';
 
     var logger = log4js.getLogger('app'),
@@ -30,8 +31,8 @@ require('requirejs')([
     app.use(morgan(config.morgan));
     logger.setLevel(config.logger);
 
-    //app.use('/api', bodyParser.json());
-    //app.use('/api', apiRouters);
+    app.use('/api', bodyParser.json());
+    app.use('/api', apiRouters);
 
     app.use(function (req, res, next) {
         var dir = req.url.match(/\/.+?\//i);
