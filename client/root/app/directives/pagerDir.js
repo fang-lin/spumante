@@ -20,9 +20,12 @@ define(function () {
         var total = Math.ceil(count / limit);
         var inter = size - 2;
         var current = skip / limit;
+        var i;
 
         if (skip !== 0 && skip >= count) {
-            fn && fn((total - 1) * limit, limit);
+            if (fn) {
+                fn((total - 1) * limit, limit);
+            }
             return chain;
         }
 
@@ -43,7 +46,7 @@ define(function () {
                 num: 1,
                 skip: 0
             });
-            for (var i = start; i < inter + start; ++i) {
+            for (i = start; i < inter + start; ++i) {
                 chain.push({
                     num: i + 1,
                     skip: i * limit
@@ -54,7 +57,7 @@ define(function () {
                 skip: ( total - 1 ) * limit
             });
         } else {
-            for (var i = 0; i < total; ++i) {
+            for (i = 0; i < total; ++i) {
                 chain.push({
                     num: i + 1,
                     skip: i * limit
@@ -73,7 +76,7 @@ define(function () {
 
             return {
                 restrict: 'E',
-                templateUrl: 'app/templates/pager.html',
+                templateUrl: 'app/partials/pager.html',
                 replace: true,
                 scope: {
                     skip: '=',
