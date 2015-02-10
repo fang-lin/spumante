@@ -22,7 +22,7 @@ var gulp = require('gulp'),
     _ = require('underscore'),
     fs = require('fs');
 
-// endregion lint
+// region lint
 
 gulp.task('lint', function () {
     return gulp.src([
