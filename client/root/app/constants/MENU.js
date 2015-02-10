@@ -13,7 +13,7 @@ define(function () {
             children: [
                 {
                     name: 'Dashboard',
-                    url: '#/dashboard'
+                    url: 'dashboard'
                 }
             ]
         },
@@ -23,19 +23,19 @@ define(function () {
             children: [
                 {
                     name: 'Posts List',
-                    url: '#/posts'
+                    url: 'posts'
                 },
                 {
                     name: 'Post',
-                    url: '#/post'
+                    url: 'post'
                 },
                 {
                     name: 'Tags',
-                    url: '#/tags'
+                    url: 'tags'
                 },
                 {
                     name: 'Tag',
-                    url: '#/tag'
+                    url: 'tag'
                 }
             ]
         },
@@ -45,11 +45,11 @@ define(function () {
             children: [
                 {
                     name: 'Comments List',
-                    url: '#/comments'
+                    url: 'comments'
                 },
                 {
                     name: 'Comment',
-                    url: '#/comment'
+                    url: 'comment'
                 }
             ]
         },
@@ -59,19 +59,19 @@ define(function () {
             children: [
                 {
                     name: 'Users List',
-                    url: '#/users'
+                    url: 'users'
                 },
                 {
                     name: 'User',
-                    url: '#/user'
+                    url: 'user'
                 },
                 {
                     name: 'Roles List',
-                    url: '#/roles'
+                    url: 'roles'
                 },
                 {
                     name: 'Role',
-                    url: '#/role'
+                    url: 'role'
                 }
             ]
         },
@@ -81,11 +81,11 @@ define(function () {
             children: [
                 {
                     name: 'Settings List',
-                    url: '#/settings'
+                    url: 'settings'
                 },
                 {
                     name: 'Setting',
-                    url: '#/setting'
+                    url: 'setting'
                 }
             ]
         }

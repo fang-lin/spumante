@@ -48,6 +48,6 @@ define([
 //                    return (this.isAuthenticated()
 //                        && authorizedRoles.indexOf(session.userRole) !== -1);
 //                }
-            }
+            };
         }];
 });

@@ -9,7 +9,6 @@ requirejs.config({
         'jquery': '/lib/jquery/dist/jquery',
         'underscore': '/lib/underscore/underscore',
         'crypto': '/lib/crypto/crypto',
-        'bootstrap': '/lib/bootstrap/dist/js/bootstrap',
         'angular': '/lib/angular/angular',
         'angular-resource': '/lib/angular-resource/angular-resource',
         'angular-route': '/lib/angular-route/angular-route',
@@ -27,9 +26,6 @@ requirejs.config({
         'constants': 'app/constants'
     },
     shim: {
-        bootstrap: {
-            deps: ['jquery']
-        },
         angular: {
             deps: ['jquery']
         },
@@ -50,7 +46,6 @@ requirejs.config({
 
 require([
     'config',
-    'bootstrap',
     'angular',
     'app'
 ], function (config) {

@@ -12,7 +12,7 @@ define(function () {
 
             return {
                 restrict: 'E',
-                templateUrl: 'app/templates/menu.html',
+                templateUrl: 'app/partials/menu.html',
                 scope: {
                     menu: '='
                 },

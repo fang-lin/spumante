@@ -30,7 +30,7 @@ define([
                         });
                 },
                 isLogin: function () {
-                    console.log(session.token())
+                    console.log(session.token());
                     return !!session.token();
                 },
                 toArgot: function () {
@@ -71,6 +71,6 @@ define([
 //                    return (this.isAuthenticated()
 //                        && authorizedRoles.indexOf(session.userRole) !== -1);
 //                }
-            }
+            };
         }];
 });

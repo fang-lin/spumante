@@ -6,30 +6,26 @@
 requirejs.config({
     paths: {
         // Libs
-        'jquery': 'lib/jquery/dist/jquery.min',
-        'underscore': 'lib/underscore/underscore',
-        'crypto': 'lib/crypto/crypto.min',
-        'bootstrap': 'lib/bootstrap/dist/js/bootstrap.min',
-        'angular': 'lib/angular/angular.min',
-        'angular-resource': 'lib/angular-resource/angular-resource.min',
-        'angular-route': 'lib/angular-route/angular-route.min',
-        'angular-animate': 'lib/angular-animate/angular-animate.min',
-        'angular-translate': 'lib/angular-translate/angular-translate.min',
+        'jquery': '../lib/jquery/dist/jquery',
+        'underscore': '../lib/underscore/underscore',
+        'crypto': '../lib/crypto/crypto',
+        'angular': '../lib/angular/angular',
+        'angular-resource': '../lib/angular-resource/angular-resource',
+        'angular-route': '../lib/angular-route/angular-route',
+        'angular-animate': '../lib/angular-animate/angular-animate',
+        'angular-translate': '../lib/angular-translate/angular-translate',
         // Apps
-        'config': 'root/app/config',
-        'app': 'root/app/app',
-        'services': 'root/app/services',
-        'controllers': 'root/app/controllers',
-        'routes': 'root/app/routes',
-        'directives': 'root/app/directives',
-        'filters': 'root/app/filters',
-        'resources': 'root/app/resources',
-        'constants': 'root/app/constants'
+        'config': 'app/config',
+        'app': 'app/app',
+        'services': 'app/services',
+        'controllers': 'app/controllers',
+        'routes': 'app/routes',
+        'directives': 'app/directives',
+        'filters': 'app/filters',
+        'resources': 'app/resources',
+        'constants': 'app/constants'
     },
     shim: {
-        bootstrap: {
-            deps: ['jquery']
-        },
         angular: {
             deps: ['jquery']
         },

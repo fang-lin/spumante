@@ -24,13 +24,13 @@ define([
         .module(name, [
             'ngRoute',
             'ngAnimate',
-                name + '.routes',
-                name + '.controllers',
-                name + '.directives',
-                name + '.filters',
-                name + '.resources',
-                name + '.services',
-                name + '.constants'
+            name + '.routes',
+            name + '.controllers',
+            name + '.directives',
+            name + '.filters',
+            name + '.resources',
+            name + '.services',
+            name + '.constants'
         ])
         .run([
             '$rootScope',
@@ -88,7 +88,9 @@ define([
                     $rootScope.isLogin = true;
                     $rootScope.user = authorization.user();
                     $rootScope.fetchSettings();
-                    redirect && $location.path('/dashboard');
+                    if (redirect) {
+                        $location.path('/dashboard');
+                    }
                 });
 
                 $rootScope.$on(AUTH_EVENTS.logoutSuccess, function () {
