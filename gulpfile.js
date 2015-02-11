@@ -10,6 +10,7 @@ var gulp = require('gulp'),
     clean = require('gulp-clean'),
     jshint = require('gulp-jshint'),
     nodemon = require('gulp-nodemon'),
+    bust = require('gulp-buster'),
     less = require('gulp-less'),
     minifyCss = require('gulp-minify-css'),
     uglify = require('gulp-uglify'),
@@ -26,6 +27,8 @@ var gulp = require('gulp'),
 
 gulp.task('lint', function () {
     return gulp.src([
+        '*.js',
+        'server/**/*',
         'client/root/app/**/*.js',
         'client/blog/app/**/*.js'
     ])
@@ -62,8 +65,8 @@ gulp.task('nodemon', function () {
     nodemon({
         script: 'app.js',
         ext: 'js json',
-        ignore: ['node_modules', 'client', 'dest'],
-        env: {'NODE_ENV': 'development'}
+        ignore: ['node_modules/*', 'client/*', 'dist/*'],
+        env: {'NODE_ENV': 'DEVELOPMENT'}
     }).on('restart', function () {
         util.log(util.colors.cyan('nodemon restarted'));
     });
@@ -88,11 +91,11 @@ gulp.task('bower', ['clean'], function (done) {
 // region minify-css
 
 gulp.task('minify-css:root', ['less:root'], function () {
-    return gulp.src('./client/root/css/main.css')
+    return gulp.src('client/root/css/main.css')
         .pipe(minifyCss({
             keepSpecialComments: 0
         }))
-        .pipe(gulp.dest('./dist/root/css/'));
+        .pipe(gulp.dest('dist/root/css/'));
 });
 
 gulp.task('minify-css:blog', ['less:blog'], function () {
@@ -100,7 +103,7 @@ gulp.task('minify-css:blog', ['less:blog'], function () {
         .pipe(minifyCss({
             keepSpecialComments: 0
         }))
-        .pipe(gulp.dest('./dist/root/css/'));
+        .pipe(gulp.dest('./dist/blog/css/'));
 });
 
 gulp.task('minify-css', ['minify-css:root', 'minify-css:blog']);
@@ -109,9 +112,9 @@ gulp.task('minify-css', ['minify-css:root', 'minify-css:blog']);
 // region git-hook
 
 gulp.task('git-hook', function (done) {
-    gulp.src('./githook.hb')
+    gulp.src('githook.hb')
         .pipe(rename('pre-commit'))
-        .pipe(gulp.dest('./.git/hooks/'))
+        .pipe(gulp.dest('.git/hooks/'))
         .on('end', done);
 });
 
@@ -135,19 +138,21 @@ gulp.task('compress:requirejs', ['bower'], function () {
 gulp.task('compress:root', ['bower'], function () {
     return gulp.src('client/root/*').
         pipe(amdOptimize('init', {
-            baseUrl: './client/root/',
-            configFile: './client/root/build.js'
+            baseUrl: 'client/root/',
+            configFile: 'client/root/build.js'
         }))
         .pipe(concat('init.js'))
         .pipe(uglify())
+        .pipe(gulp.dest('dist/root'))
+        .pipe(bust('init.json'))
         .pipe(gulp.dest('dist/root'));
 });
 
 gulp.task('compress:blog', ['bower'], function () {
     return gulp.src('client/blog/*').
         pipe(amdOptimize('init', {
-            baseUrl: './client/blog/',
-            configFile: './client/blog/config.js'
+            baseUrl: 'client/blog/',
+            configFile: 'client/blog/config.js'
         }))
         .pipe(concat('init.js'))
         .pipe(gulp.dest('dist/root'));
@@ -158,35 +163,75 @@ gulp.task('compress', ['compress:requirejs', 'compress:root'/*, 'compress:blog'*
 // endregion compress
 // region copy
 
-gulp.task('copy:lib', ['bower'], function () {
+gulp.task('copy:common', ['bower'], function () {
     return copy2([
         {src: 'client/lib/html5shiv/dist/html5shiv.min.js', dest: 'dist/lib/html5shiv/dist/'},
-        {src: 'client/lib/respond/dest/respond.min.js', dest: 'dist/lib/respond/dest/'}
+        {src: 'client/lib/respond/dest/respond.min.js', dest: 'dist/lib/respond/dest/'},
+        {src: 'client/*.*', dest: 'dist/'}
     ]);
 });
 
-gulp.task('copy:root', function () {
+gulp.task('copy:root', ['clean'], function () {
     return copy2([
         {src: 'client/root/index.html', dest: 'dist/root/'},
-        {src: 'client/root/css/all.css', dest: 'dist/root/css'},
-        {src: 'client/root/app/views/*', dest: 'dist/root/app/views/'},
-        {src: 'client/root/app/partials/*', dest: 'dist/root/app/partials/'},
+        {src: 'client/root/favicon.ico', dest: 'dist/root/'},
+        {src: 'client/root/app/views/*.*', dest: 'dist/root/app/views/'},
+        {src: 'client/root/app/partials/*.*', dest: 'dist/root/app/partials/'}
     ]);
 });
 
-gulp.task('copy:blog', function () {
+gulp.task('copy:blog', ['clean'], function () {
     return copy2([
         {src: 'client/blog/index.html', dest: 'dist/blog/'},
-        {src: 'client/blog/css/all.css', dest: 'dist/blog/css'},
-        {src: 'client/blog/css/all.css', dest: 'dist/blog/css'},
+        {src: 'client/blog/favicon.ico', dest: 'dist/blog/'},
         {src: 'client/blog/app/views/*', dest: 'dist/blog/app/views/'},
         {src: 'client/blog/app/partials/*', dest: 'dist/blog/app/partials/'}
     ]);
 });
 
-gulp.task('copy', ['copy:lib', 'copy:root'/*, 'copy:blog'*/]);
+gulp.task('copy', ['copy:common', 'copy:root'/*, 'copy:blog'*/]);
 
 // endregion copy
+
+gulp.task('bust', /*['build'],*/ function () {
+
+
+    //.pipe(bust({
+    //    fileName: 'css.json',
+    //    transform: function (map) {
+    //        return {'asdasd': 'asdasd'};
+    //    }
+    //}))
+    //    .pipe(gulp.dest('dist/root/'));
+
+    var src = [
+        'dist/root/init.js',
+        'dist/root/css/main.css'
+    ];
+
+    gulp.src(src)
+        .pipe(bust())
+        .pipe(gulp.dest('.'))
+        .on('end', function () {
+            var busters = require('./busters.json');
+            for (var file in busters) {
+                if (busters.hasOwnProperty(file)) {
+
+                    var hash = busters[file];
+                    var filename = path.normalize(file);
+                    filename = filename.split(path.sep);
+                    filename = filename[filename.length - 1];
+                    filename = filename.split('.');
+                    gulp.src(file)
+                        .pipe(rename(filename[0] + '.' + hash + '.' + filename[1]))
+                        .pipe(gulp.dest(path.dirname(file)));
+
+                    gulp.src(file);
+                }
+            }
+        });
+});
+
 // region integration
 
 gulp.task('develop', ['nodemon', 'watch', 'git-hook']);

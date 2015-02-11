@@ -48,7 +48,7 @@ define([
                                     if (++fulfilled === end) {
                                         res.send(docs);
                                     }
-                                })
+                                });
                         });
                     });
 

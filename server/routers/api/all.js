@@ -5,7 +5,7 @@
  */
 
 define([
-    'config', // Project configuration.
+    '../../../client/root/app/config', // Project configuration.
     'log4js',
     'express',
     'express-jwt', // Middleware that validates JsonWebTokens and set req.user.

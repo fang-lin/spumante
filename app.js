@@ -3,58 +3,65 @@
  * Author: isaac.fang@grapecity.com
  */
 
-require('requirejs')([
-    'config', // Project configuration.
-    'express', // Web application framework for node.
-    'body-parser', // Node.js body parsing middleware.
-    'morgan', // Logging middleware for node.js http apps.
-    'compression', // Node.js compression middleware.
-    'errorhandler', // Create new middleware to handle errors and respond with content negotiation.
-    'mongoose', // Elegant mongodb object modeling for node.js.
-    'log4js', // Port of Log4js to work with node.
-    'send', // connect's static() file server extracted for general node.js use
-    'server/routers/all'
-], function (config, express, bodyParser, morgan, compression, errorhandler, mongoose, log4js, send, apiRouters) {
-    'use strict';
+var config = require('./config'),
+    http = require('http'),
+    express = require('express'),// Web application framework for node.
+    bodyParser = require('body-parser'), // Node.js body parsing middleware.
+    morgan = require('morgan'), // Logging middleware for node.js http apps.
+    compression = require('compression'), // Node.js compression middleware.
+    errorhandler = require('errorhandler'),// Create new middleware to handle errors and respond with content negotiation.
+    mongoose = require('mongoose'),// Elegant mongodb object modeling for node.js.
+    log4js = require('log4js'),// Port of Log4js to work with node.
+    send = require('send'), // connect's static() file server extracted for general node.js use
+    routerClient = require('./server/routers/client'); // connect's static() file server extracted for general node.js use
 
-    var logger = log4js.getLogger('app'),
-        app = express(),
-        ENV = config.ENV;
+var logger = log4js.getLogger('app');
+logger.setLevel(config.LOGGER);
 
-    if (ENV(['development', 'dev'])) {
-        app.use(errorhandler());
-    } else {
-        app.use(compression());
-    }
+var app = express(),
+    server = http.Server(app);
 
-    app.use(express.static(config.clientPath));
-    app.use(morgan(config.morgan));
-    logger.setLevel(config.logger);
+var viewExts = ['.html', '.js', '.css'];
 
-    app.use('/api', bodyParser.json());
-    app.use('/api', apiRouters);
+viewExts.forEach(function (ext) {
+    app.engine(ext, require('ejs').__express);
+});
+app.set('view engine', 'ejs');
+app.set('views', config.CLIENT_DIR);
 
-    app.use(function (req, res, next) {
-        var dir = req.url.match(/\/.+?\//i);
-        if (dir) {
-            send(req, config.clientPath + dir[0] + 'index.html')
-                .on('error', function (err) {
-                    res.statusCode = err.status || 500;
-                    if (err.status === 404) {
-                        send(req, config.clientPath + '/404.html').pipe(res);
-                    } else {
-                        res.end(err.message);
-                    }
-                })
-                .pipe(res);
-        }
-    });
+app.use(function (req, res, next) {
+    res.header('X-Powered-By', 'Spumante');
+    next();
+});
 
-    var port = config.port;
-    app.listen(port);
+if (config.ERRORHANDLER) {
+    app.use(errorhandler());
+}
+
+if (config.COMPRESSION) {
+    app.use(compression());
+}
+
+app.use(morgan(config.MORGAN));
+
+app.use(routerClient({
+    viewExts: viewExts,
+    hashmap: {}
+}));
+
+app.use(function (req, res, next) {
+    res.end('404');
+});
+
+
+//app.use(config.API_BASE, bodyParser.json());
+//app.use(config.API_BASE, apiRouters);
+
+var port = process.env.PORT || config.PORT;
+app.listen(port, function () {
     logger.info('Http server listening on port ' + port);
+});
 
-    var mongooseLink = config.mongooseLink;
-    mongoose.connect(mongooseLink);
-    logger.info('Mongoose connect to ' + mongooseLink);
+mongoose.connect(config.MONGODB_LINK, function () {
+    logger.info('Mongoose connect to ' + config.MONGODB_LINK);
 });

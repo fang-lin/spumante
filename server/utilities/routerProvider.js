@@ -8,8 +8,6 @@ define([
     'underscore'
 ], function (config, _) {
 
-
-
     function Router(expressRouter) {
         this.expressRouter = expressRouter;
     }
@@ -27,7 +25,7 @@ define([
         _.extend(router, this.injects);
 
         this.alls.forEach(function (fn) {
-            fn(router, route)
+            fn(router, route);
         });
         route.action(router);
         return this;
