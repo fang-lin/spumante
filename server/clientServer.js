@@ -19,23 +19,23 @@ logger.setLevel(config.LOGGER);
 
 var router = express.Router(),
     sep = path.sep,
-    MAX_AGE = config.MAX_AGE,
-    CLIENT_DIR = config.CLIENT_DIR;
+    MAX_AGE = config.CACHE_MAX_AGE,
+    DIR = config.CLIENT_DIR;
 
-var defaultPage = 'index.html';
+var pageIndex = 'index.html';
 
 var data = {
     tail: function () {
         return '';
     },
-    dir: CLIENT_DIR
+    dir: DIR
 };
 
 try {
     if (config.BUSTER) {
-        var buster = require('../' + CLIENT_DIR + sep + config.BUSTER);
+        var buster = require('../' + DIR + sep + config.BUSTER);
         data.tail = function (file) {
-            var v = buster[CLIENT_DIR + '/' + file];
+            var v = buster[DIR + '/' + file];
             return '?v=' + (v ? v.slice(0, 16) : 'master');
         };
     }
@@ -49,26 +49,27 @@ function contentType(file) {
     return type + (charset ? '; charset=' + charset : '');
 }
 
-function sendPlainFile(res, next, file, html) {
-    fs.stat(CLIENT_DIR + sep + file, function (err, stat) {
+function sendPlainFile(res, next, file, html, maxage) {
+    fs.stat(DIR + sep + file, function (err, stat) {
         if (err) {
             next(err);
         } else {
             res.set({
                 'Accept-Ranges': 'bytes',
-                'Cache-Control': 'public, max-age=' + Math.floor(MAX_AGE / 1000),
+                'Cache-Control': maxage ? 'public, max-age=' + maxage : 'no-cache',
                 'Content-Type': contentType(file),
-                'Last-Modified': stat.mtime.toUTCString()
+                'Last-Modified': stat.mtime.toUTCString(),
+                'Expires': (new Date(stat.mtime.getTime() + maxage * 1000)).toUTCString()
             }).send(html);
         }
     });
 }
 
 module.exports = function (opt) {
-
     var viewExts = opt.viewExts || [];
 
     return function (req, res, next) {
+        var maxage = MAX_AGE;
         if (req.method !== 'GET' && req.method !== 'HEAD') {
             return next();
         }
@@ -78,15 +79,19 @@ module.exports = function (opt) {
         }
         if (file[file.length - 1] === sep || file.length === 0) {
             // path likes: root/ or ''
-            file += defaultPage;
+            file += pageIndex;
+            maxage = 0;
+        } else if (file.split(pageIndex).reverse()[0] === '') {
+            // this file is **/index.html
+            maxage = 0;
         }
 
         var extname = path.extname(file);
         if (extname !== '' && viewExts.indexOf(extname) === -1) {
             // if file extname is not include in viewExts, send file immediately
             send(req, file, {
-                root: CLIENT_DIR,
-                maxAge: MAX_AGE
+                root: DIR,
+                maxAge: MAX_AGE * 1000
             }).pipe(res);
         } else {
             res.render(file, data, function (err, html) {
@@ -94,21 +99,22 @@ module.exports = function (opt) {
                     logger.warn(err.message);
                     var slice = file.split(sep);
                     if (slice.length > 0) {
-                        // path likes: root/xxx
-                        file = slice[0] + sep + defaultPage;
+                        // path likes: root/** then redirect to root/index.html
+                        file = slice[0] + sep + pageIndex;
+                        maxage = 0;
                         res.render(file, data, function (err, html) {
                             if (err) {
                                 logger.warn(err.message);
                                 next();
                             } else {
-                                sendPlainFile(res, next, file, html);
+                                sendPlainFile(res, next, file, html, maxage);
                             }
                         });
                     } else {
                         next();
                     }
                 } else {
-                    sendPlainFile(res, next, file, html);
+                    sendPlainFile(res, next, file, html, maxage);
                 }
             });
         }

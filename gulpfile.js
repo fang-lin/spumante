@@ -59,6 +59,8 @@ gulp.task('less:blog', ['bower'], function (done) {
         .pipe(gulp.dest('client/root/css/'));
 });
 
+gulp.task('less', ['less:root', 'less:blog']);
+
 // endregion less
 // region nodemon
 
@@ -192,6 +194,7 @@ gulp.task('copy:root', ['clean'], function () {
     return copy2([
         {src: 'client/root/index.html', dest: 'dist/root/'},
         {src: 'client/root/favicon.ico', dest: 'dist/root/'},
+        {src: 'client/root/images/*.*', dest: 'dist/root/images/'},
         {src: 'client/root/app/views/*.*', dest: 'dist/root/app/views/'},
         {src: 'client/root/app/partials/*.*', dest: 'dist/root/app/partials/'}
     ]);
@@ -201,6 +204,7 @@ gulp.task('copy:blog', ['clean'], function () {
     return copy2([
         {src: 'client/blog/index.html', dest: 'dist/blog/'},
         {src: 'client/blog/favicon.ico', dest: 'dist/blog/'},
+        {src: 'client/blog/images/*.*', dest: 'dist/blog/images/'},
         {src: 'client/blog/app/views/*', dest: 'dist/blog/app/views/'},
         {src: 'client/blog/app/partials/*', dest: 'dist/blog/app/partials/'}
     ]);

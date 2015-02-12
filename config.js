@@ -14,7 +14,7 @@ var CONFIGS = {
         'API_BASE': '/api',
         'ERRORHANDLER': true,
         'COMPRESSION': false,
-        'MAX_AGE': 0,
+        'CACHE_MAX_AGE': 0, // unit: second
         'BUSTER': false
     },
     'BUILD': {
@@ -27,7 +27,7 @@ var CONFIGS = {
         'API_BASE': '/api',
         'ERRORHANDLER': true,
         'COMPRESSION': false,
-        'MAX_AGE': 0,
+        'CACHE_MAX_AGE': 0,
         'BUSTER': false
     },
     'DEFAULT': {
@@ -40,7 +40,7 @@ var CONFIGS = {
         'API_BASE': '/api',
         'ERRORHANDLER': false,
         'COMPRESSION': true,
-        'MAX_AGE': 0,
+        'CACHE_MAX_AGE': 3600,
         'BUSTER': 'buster.json'
     },
     'PRODUCTION': {
@@ -53,7 +53,7 @@ var CONFIGS = {
         'API_BASE': '/api',
         'ERRORHANDLER': false,
         'COMPRESSION': true,
-        'MAX_AGE': 0,
+        'CACHE_MAX_AGE': 3600,
         'BUSTER': 'buster.json'
     }
 };
