@@ -13,7 +13,7 @@ define(function () {
             };
             return {
                 restrict: 'A',
-                templateUrl: 'app/partials/dialog.html',
+                templateUrl: 'app/partials/dialog.html<&= tail("root/app/partials/dialog.html") &>',
                 replace: true,
                 scope: {
                     list: '=list'

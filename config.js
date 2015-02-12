@@ -13,7 +13,9 @@ var CONFIGS = {
         'MONGODB_LINK': 'mongodb://localhost/oglen-db',
         'API_BASE': '/api',
         'ERRORHANDLER': true,
-        'COMPRESSION': false
+        'COMPRESSION': false,
+        'MAX_AGE': 0,
+        'BUSTER': false
     },
     'BUILD': {
         'CACHE': null,
@@ -24,7 +26,9 @@ var CONFIGS = {
         'MONGODB_LINK': 'mongodb://localhost/oglen-db',
         'API_BASE': '/api',
         'ERRORHANDLER': true,
-        'COMPRESSION': false
+        'COMPRESSION': false,
+        'MAX_AGE': 0,
+        'BUSTER': false
     },
     'DEFAULT': {
         'CACHE': null,
@@ -35,7 +39,9 @@ var CONFIGS = {
         'MONGODB_LINK': 'mongodb://localhost/oglen-db',
         'API_BASE': '/api',
         'ERRORHANDLER': false,
-        'COMPRESSION': true
+        'COMPRESSION': true,
+        'MAX_AGE': 0,
+        'BUSTER': 'buster.json'
     },
     'PRODUCTION': {
         'CACHE': null,
@@ -46,7 +52,9 @@ var CONFIGS = {
         'MONGODB_LINK': 'mongodb://heroku_app33706267:heroku_app33706267@ds041561.mongolab.com:41561/heroku_app33706267',
         'API_BASE': '/api',
         'ERRORHANDLER': false,
-        'COMPRESSION': true
+        'COMPRESSION': true,
+        'MAX_AGE': 0,
+        'BUSTER': 'buster.json'
     }
 };
 

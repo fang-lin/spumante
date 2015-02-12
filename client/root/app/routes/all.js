@@ -18,12 +18,12 @@ define([
                 $routeProvider
                     .when('/', {
                         controller: 'DashboardCtrl',
-                        templateUrl: 'app/views/dashboard.html',
+                        templateUrl: 'app/views/dashboard.html<&= tail("root/app/views/dashboard.html") &>',
                         access: {requireLogin: true}
                     })
                     .when('/login', {
                         controller: 'LoginCtrl',
-                        templateUrl: 'app/views/login.html',
+                        templateUrl: 'app/views/login.html<&= tail("root/app/views/login.html") &>',
                         access: {requireLogout: true}
                     })
                     .when('/logout', {
@@ -33,67 +33,67 @@ define([
                     })
                     .when('/dashboard', {
                         controller: 'DashboardCtrl',
-                        templateUrl: 'app/views/dashboard.html',
+                        templateUrl: 'app/views/dashboard.html<&= tail("root/app/views/dashboard.html") &>',
                         access: {requireLogin: true}
                     })
                     .when('/post/:id?', {
                         controller: 'PostCtrl',
-                        templateUrl: 'app/views/post.html',
+                        templateUrl: 'app/views/post.html<&= tail("root/app/views/post.html") &>',
                         access: {requireLogin: true}
                     })
                     .when('/posts/:skip?/:limit?', {
                         controller: 'PostsCtrl',
-                        templateUrl: 'app/views/posts.html',
+                        templateUrl: 'app/views/posts.html<&= tail("root/app/views/posts.html") &>',
                         access: {requireLogin: true}
                     })
                     .when('/tag/:id?', {
                         controller: 'TagCtrl',
-                        templateUrl: 'app/views/tag.html',
+                        templateUrl: 'app/views/tag.html<&= tail("root/app/views/tag.html") &>',
                         access: {requireLogin: true}
                     })
                     .when('/tags/:skip?/:limit?', {
                         controller: 'TagsCtrl',
-                        templateUrl: 'app/views/tags.html',
+                        templateUrl: 'app/views/tags.html<&= tail("root/app/views/tags.html") &>',
                         access: {requireLogin: true}
                     })
                     .when('/comment/:id?', {
                         controller: 'CommentCtrl',
-                        templateUrl: 'app/views/comment.html',
+                        templateUrl: 'app/views/comment.html<&= tail("root/app/views/comment.html") &>',
                         access: {requireLogin: true}
                     })
                     .when('/comments/:skip?/:limit?', {
                         controller: 'CommentsCtrl',
-                        templateUrl: 'app/views/comments.html',
+                        templateUrl: 'app/views/comments.html<&= tail() &>',
                         access: {requireLogin: true}
                     })
                     .when('/user/:id?', {
                         controller: 'UserCtrl',
-                        templateUrl: 'app/views/user.html',
+                        templateUrl: 'app/views/user.html<&= tail() &>',
                         access: {requireLogin: true}
                     })
                     .when('/users/:skip?/:limit?', {
                         controller: 'UsersCtrl',
-                        templateUrl: 'app/views/users.html',
+                        templateUrl: 'app/views/users.html<&= tail() &>',
                         access: {requireLogin: true}
                     })
                     .when('/role/:id?', {
                         controller: 'RoleCtrl',
-                        templateUrl: 'app/views/role.html',
+                        templateUrl: 'app/views/role.html<&= tail() &>',
                         access: {requireLogin: true}
                     })
                     .when('/roles/:skip?/:limit?', {
                         controller: 'RolesCtrl',
-                        templateUrl: 'app/views/roles.html',
+                        templateUrl: 'app/views/roles.html<&= tail() &>',
                         access: {requireLogin: true}
                     })
                     .when('/setting/:id?', {
                         controller: 'SettingCtrl',
-                        templateUrl: 'app/views/setting.html',
+                        templateUrl: 'app/views/setting.html<&= tail() &>',
                         access: {requireLogin: true}
                     })
                     .when('/settings/:skip?/:limit?', {
                         controller: 'SettingsCtrl',
-                        templateUrl: 'app/views/settings.html',
+                        templateUrl: 'app/views/settings.html<&= tail() &>',
                         access: {requireLogin: true}
                     })
                     .otherwise({

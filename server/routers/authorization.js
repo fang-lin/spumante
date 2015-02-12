@@ -4,7 +4,7 @@
  */
 
 define([
-        '../../../client/root/app/config',
+        '../../client/root/app/config',
         'server/utilities/encrypt',
         'jsonwebtoken',
         'server/models/User'

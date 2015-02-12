@@ -10,7 +10,7 @@ var gulp = require('gulp'),
     clean = require('gulp-clean'),
     jshint = require('gulp-jshint'),
     nodemon = require('gulp-nodemon'),
-    bust = require('gulp-buster'),
+    buster = require('gulp-buster'),
     less = require('gulp-less'),
     minifyCss = require('gulp-minify-css'),
     uglify = require('gulp-uglify'),
@@ -21,7 +21,8 @@ var gulp = require('gulp'),
     path = require('path'),
     Q = require('q'),
     _ = require('underscore'),
-    fs = require('fs');
+    fs = require('fs'),
+    config = require('./config');
 
 // region lint
 
@@ -132,19 +133,27 @@ gulp.task('clean', function () {
 gulp.task('compress:requirejs', ['bower'], function () {
     gulp.src('client/lib/requirejs/require.js')
         .pipe(uglify())
-        .pipe(gulp.dest('dist/lib/requirejs/'));
+        .pipe(gulp.dest('dist/lib/'));
 });
 
 gulp.task('compress:root', ['bower'], function () {
     return gulp.src('client/root/*').
-        pipe(amdOptimize('init', {
+        pipe(amdOptimize('init-build', {
             baseUrl: 'client/root/',
-            configFile: 'client/root/build.js'
+            configFile: 'client/root/init-build-config.js',
+            exclude: [
+                'jquery',
+                'underscore',
+                'crypto',
+                'angular',
+                'angular-resource',
+                'angular-route',
+                'angular-animate',
+                'angular-translate'
+            ]
         }))
         .pipe(concat('init.js'))
         .pipe(uglify())
-        .pipe(gulp.dest('dist/root'))
-        .pipe(bust('init.json'))
         .pipe(gulp.dest('dist/root'));
 });
 
@@ -165,8 +174,16 @@ gulp.task('compress', ['compress:requirejs', 'compress:root'/*, 'compress:blog'*
 
 gulp.task('copy:common', ['bower'], function () {
     return copy2([
-        {src: 'client/lib/html5shiv/dist/html5shiv.min.js', dest: 'dist/lib/html5shiv/dist/'},
-        {src: 'client/lib/respond/dest/respond.min.js', dest: 'dist/lib/respond/dest/'},
+        {src: 'client/lib/html5shiv/dist/html5shiv.*', dest: 'dist/lib/'},
+        {src: 'client/lib/respond/dest/respond.*', dest: 'dist/lib/'},
+        {src: 'client/lib/jquery/dist/jquery.*', dest: 'dist/lib/'},
+        {src: 'client/lib/underscore/underscore*', dest: 'dist/lib/'},
+        {src: 'client/lib/crypto/crypto.min.*', dest: 'dist/lib/'},
+        {src: 'client/lib/angular/angular.min.*', dest: 'dist/lib/'},
+        {src: 'client/lib/angular-resource/angular-resource.*', dest: 'dist/lib/'},
+        {src: 'client/lib/angular-route/angular-route.*', dest: 'dist/lib/'},
+        {src: 'client/lib/angular-animate/angular-animate.*', dest: 'dist/lib/'},
+        {src: 'client/lib/angular-translate/angular-translate.*', dest: 'dist/lib/'},
         {src: 'client/*.*', dest: 'dist/'}
     ]);
 });
@@ -192,50 +209,18 @@ gulp.task('copy:blog', ['clean'], function () {
 gulp.task('copy', ['copy:common', 'copy:root'/*, 'copy:blog'*/]);
 
 // endregion copy
-
-gulp.task('bust', /*['build'],*/ function () {
-
-
-    //.pipe(bust({
-    //    fileName: 'css.json',
-    //    transform: function (map) {
-    //        return {'asdasd': 'asdasd'};
-    //    }
-    //}))
-    //    .pipe(gulp.dest('dist/root/'));
-
-    var src = [
-        'dist/root/init.js',
-        'dist/root/css/main.css'
-    ];
-
-    gulp.src(src)
-        .pipe(bust())
-        .pipe(gulp.dest('.'))
-        .on('end', function () {
-            var busters = require('./busters.json');
-            for (var file in busters) {
-                if (busters.hasOwnProperty(file)) {
-
-                    var hash = busters[file];
-                    var filename = path.normalize(file);
-                    filename = filename.split(path.sep);
-                    filename = filename[filename.length - 1];
-                    filename = filename.split('.');
-                    gulp.src(file)
-                        .pipe(rename(filename[0] + '.' + hash + '.' + filename[1]))
-                        .pipe(gulp.dest(path.dirname(file)));
-
-                    gulp.src(file);
-                }
-            }
-        });
-});
-
 // region integration
 
 gulp.task('develop', ['nodemon', 'watch', 'git-hook']);
 
 gulp.task('build', ['copy', 'minify-css', 'compress']);
+
+gulp.task('publish', ['build'], function () {
+    return gulp.src('dist/**/*')
+        .pipe(buster({
+            fileName: config.BUSTER
+        }))
+        .pipe(gulp.dest('dist'));
+});
 
 // endregion integration

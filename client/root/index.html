@@ -13,16 +13,15 @@
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
-    <script src="/lib/html5shiv/dist/html5shiv.min.js"></script>
-    <script src="/lib/respond/dest/respond.min.js"></script>
+    <script src="/lib/html5shiv/dist/html5shiv.min.js<&=tail('lib/html5shiv/dist/html5shiv.min.js')&>"></script>
+    <script src="/lib/respond/dest/respond.min.js<&=tail('lib/respond/dest/respond.min.js')&>"></script>
     <![endif]-->
-    <link rel="shortcut icon" href="favicon.ico">
-    <link rel="stylesheet" href="css/main.css"/>
+    <link rel="shortcut icon" href="favicon.ico<&=tail('root/favicon.ico')&>"/>
+    <link rel="stylesheet" href="css/main.css<&=tail('root/css/main.css')&>"/>
 
     <title ng-bind="info.title">admin.oglen.net</title>
 </head>
 <body>
-<h1><%= 1 ? 'EJS ready!!!' : 'EJS Bad!!!' %></h1>
 <header id="logo" class="container-fluid">
     <span ng-bind="info.title">title</span>
     <a href="/blog" target="_blank">Blog</a>
@@ -40,6 +39,7 @@
 <footer>
     <span ng-bind="info.copyright">copyright</span>
 </footer>
-<script type="text/javascript" data-main="init" src="/lib/requirejs/require.js"></script>
+
+<script type="text/javascript" data-main="init.js<&=tail('root/init.js')&>" src="/lib/<&=dir=='dist'?'':'requirejs/'&>require.js<&=tail('lib/require.js')&>"></script>
 </body>
 </html>

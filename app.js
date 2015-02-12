@@ -13,26 +13,42 @@ var config = require('./config'),
     mongoose = require('mongoose'),// Elegant mongodb object modeling for node.js.
     log4js = require('log4js'),// Port of Log4js to work with node.
     send = require('send'), // connect's static() file server extracted for general node.js use
-    routerClient = require('./server/routers/client'); // connect's static() file server extracted for general node.js use
+    ejs = require('ejs'),
+    clientServer = require('./server/clientServer'); // connect's static() file server extracted for general node.js use
+
+// region logger
 
 var logger = log4js.getLogger('app');
 logger.setLevel(config.LOGGER);
 
+// endregion logger
+
 var app = express(),
     server = http.Server(app);
+
+// region template engine
+
+ejs.delimiter = '&';
 
 var viewExts = ['.html', '.js', '.css'];
 
 viewExts.forEach(function (ext) {
     app.engine(ext, require('ejs').__express);
 });
+
 app.set('view engine', 'ejs');
 app.set('views', config.CLIENT_DIR);
 
+// endregion template engine
+// region set header
+
+app.set('x-powered-by', false);
 app.use(function (req, res, next) {
-    res.header('X-Powered-By', 'Spumante');
+    res.header('server', 'Spumante');
     next();
 });
+
+// endregion set header
 
 if (config.ERRORHANDLER) {
     app.use(errorhandler());
@@ -44,15 +60,14 @@ if (config.COMPRESSION) {
 
 app.use(morgan(config.MORGAN));
 
-app.use(routerClient({
+app.use(clientServer({
     viewExts: viewExts,
-    hashmap: {}
+    buster: config.BUSTER
 }));
 
 app.use(function (req, res, next) {
-    res.end('404');
+    res.status(404).end('404');
 });
-
 
 //app.use(config.API_BASE, bodyParser.json());
 //app.use(config.API_BASE, apiRouters);
