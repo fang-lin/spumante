@@ -48,5 +48,5 @@ td {
   border: solid #999 1px;
 }
 body {
-  background: url("../images/monkey.jpg<&=tail('root/images/monkey.jpg')&>");
+  background: url("../images/monkey.jpg<&= tail('root/images/monkey.jpg') &>");
 }

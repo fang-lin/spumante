@@ -26,21 +26,21 @@ var pageIndex = 'index.html';
 
 var data = {
     tail: function () {
-        return '';
+        return '?v=static';
     },
     dir: DIR
 };
 
 try {
     if (config.BUSTER) {
-        var buster = require('../' + DIR + sep + config.BUSTER);
+        var hashmap = require('../' + DIR + sep + config.BUSTER);
         data.tail = function (file) {
-            var v = buster[DIR + '/' + file];
-            return '?v=' + (v ? v.slice(0, 16) : 'master');
+            var hash = hashmap[DIR + '/' + file];
+            return '?v=' + (hash ? hash.slice(0, 8) : 'static');
         };
     }
 } catch (err) {
-    logger.error('Please exec "gulp buster" first!');
+    logger.error(err);
 }
 
 function contentType(file) {
@@ -56,8 +56,8 @@ function sendPlainFile(res, next, file, html, maxage) {
         } else {
             res.set({
                 'Accept-Ranges': 'bytes',
-                'Cache-Control': maxage ? 'public, max-age=' + maxage : 'no-cache',
                 'Content-Type': contentType(file),
+                'Cache-Control': maxage ? 'public, max-age=' + maxage : 'no-cache',
                 'Last-Modified': stat.mtime.toUTCString(),
                 'Expires': (new Date(stat.mtime.getTime() + maxage * 1000)).toUTCString()
             }).send(html);

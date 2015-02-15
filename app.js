@@ -28,6 +28,7 @@ var app = express(),
 
 // region template engine
 
+// set ejs template target is <&=...&>
 ejs.delimiter = '&';
 
 var viewExts = ['.html', '.js', '.css'];

@@ -219,7 +219,7 @@ gulp.task('develop', ['nodemon', 'watch', 'git-hook']);
 
 gulp.task('build', ['copy', 'minify-css', 'compress']);
 
-gulp.task('publish', ['build'], function () {
+gulp.task('buster', ['build'], function () {
     return gulp.src('dist/**/*')
         .pipe(buster({
             fileName: config.BUSTER

@@ -12,7 +12,7 @@ define(function () {
 
             return {
                 restrict: 'E',
-                templateUrl: 'app/partials/menu.html<&=tail("root/app/partials/menu.html")&>',
+                templateUrl: 'app/partials/menu.html<&= tail("root/app/partials/menu.html") &>',
                 scope: {
                     menu: '='
                 },

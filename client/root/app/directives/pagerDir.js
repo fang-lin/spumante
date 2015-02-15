@@ -76,7 +76,7 @@ define(function () {
 
             return {
                 restrict: 'E',
-                templateUrl: 'app/partials/pager.html<&=tail("root/app/partials/pager.html")&>',
+                templateUrl: 'app/partials/pager.html<&= tail("root/app/partials/pager.html") &>',
                 replace: true,
                 scope: {
                     skip: '=',
