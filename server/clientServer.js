@@ -5,7 +5,6 @@
  */
 
 var config = require('../config'),
-    log4js = require('log4js'),
     express = require('express'),
     send = require('send'),
     parseurl = require('parseurl'),
@@ -14,7 +13,7 @@ var config = require('../config'),
     path = require('path'),
     mime = require('mime');
 
-var logger = log4js.getLogger('clientServer');
+var logger = require('log4js').getLogger('clientServer');
 logger.setLevel(config.LOGGER);
 
 var router = express.Router(),

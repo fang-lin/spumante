@@ -3,130 +3,173 @@
  * Author: isaac.fang@grapecity.com
  */
 
-define([
-        '../../client/root/app/config',
-        'server/utilities/encrypt',
-        'jsonwebtoken',
-        'server/models/User'
-    ], function (config, encrypt, jwt, User) {
-        'use strict';
 
-        var jwtConfig = config.jwt;
-        var argotConfig = config.argot;
+var encrypt = require('../util/encrypt'),
+    jwt = require('jsonwebtoken');
 
-        return function (route) {
-            route
-                .post(function (req, res, next) {
-                    if (req.body.argot) {
-                        argotLogin(req, res);
-                    } else {
-                        login(req, res);
-                    }
-                });
+var User = require('../models/User'),
+    errMsg = require('../util/errMsg'),
+    config = require('../../config');
 
-            function login(req, res) {
-                var form = req.body;
+var logger = require('log4js').getLogger('authorization'); // TRACE, DEBUG, INFO, WARN, ERROR, FATAL
+logger.setLevel(config.LOGGER);
 
-                findUser({
-                    username: form.username
-                }, res, function (user) {
-                    var password = encrypt.md5(encrypt.mixSalt(form.password, user.salt));
+var JWT = config.JWT;
+var ARGOT = config.ARGOT;
 
-                    if (user.password === password) {
-                        // authorization success.
-                        var token = jwtSign(user, jwtConfig.audience(req));
-                        var argot = null, cipher = null;
+//function updateUser(req, res, user, cipher, fn) {
+//    User.update({
+//        _id: user._id
+//    }, {
+//        clientIp: req.ip,
+//        loginAt: Date.now(),
+//        cipher: cipher
+//    }, function (err, numberAffected, raw) {
+//        logger.error(err);
+//        fn();
+//    });
+//}
 
-                        if (form.memorization) {
-                            argot = encrypt.randomBytes(64, 'utf8');
-                            cipher = encrypt.hash(argotConfig.algorithm, argotConfig.audience(argot, req));
-                        }
 
-                        updateUser(req, res, user, cipher, function () {
-                            send(res, token, argot, user);
-                        });
-                    } else {
-                        res.status(401).send(config.ERR_MSG.wrongPassword);
-                    }
-                });
+function updateUserAndSend(req, res, user, cipher, token, argot) {
+    User.update({
+        _id: user._id
+    }, {
+        clientIp: req.ip,
+        loginAt: Date.now(),
+        cipher: cipher
+    }, function (err, numberAffected, raw) {
+        if (err) {
+            logger.error(err);
+            res.status(500).send(errMsg.unknownErr);
+        } else if (numberAffected === 1) {
+            res.send({
+                token: token,
+                user: userFields(user),
+                argot: argot
+            });
+        } else {
+            logger.error(raw);
+        }
+    });
+}
+
+//function send(res, token, argot, user) {
+//    res.send({
+//        token: token,
+//        user: userFields(user),
+//        argot: argot
+//    });
+//}
+
+function userFields(user) {
+    return {
+        _id: user._id,
+        username: user.username,
+        email: user.email,
+        clientIp: user.clientIp,
+        createAt: user.createAt,
+        loginAt: user.loginAt,
+        role: user.role
+    };
+}
+
+function findUser(criteria, res, cb) {
+    User
+        .find(criteria)
+        .populate({
+            path: 'role',
+            select: '_id name privilege note'
+        })
+        .exec()
+        .then(function (docs) {
+            if (docs.length === 0) {
+                res.status(401).send(errMsg.nonexistentUser);
+            } else if (docs.length === 1) {
+                cb(docs[0]);
+            } else {
+                logger.warn(docs);
+                res.status(500).send(errMsg.unknownErr);
+            }
+        }, function (err) {
+            logger.error(err);
+            res.status(500).send(errMsg.unknownErr);
+        });
+}
+
+function signJwt(user, audience) {
+    return jwt.sign(userFields(user), JWT.secret, {
+        algorithm: JWT.algorithm,
+        issuer: JWT.issuer,
+        audience: audience,
+        expiresInMinutes: JWT.expiresInMinutes
+    });
+}
+
+function loginByAccount(req, res) {
+    var body = req.body;
+
+    findUser({
+        username: body.username
+    }, res, function (user) {
+        var password = encrypt.md5(encrypt.mixSalt(body.password, user.salt));
+
+        if (user.password === password) {
+            // authorization success.
+            var token = signJwt(user, JWT.audience(req));
+            var argot = null, cipher = null;
+
+            if (body.memorization) {
+                argot = encrypt.randomBytes(64, 'utf8');
+                cipher = encrypt.hash(argotConfig.algorithm, argotConfig.audience(argot, req));
             }
 
-            function argotLogin(req, res) {
-                var cipher = encrypt.hash(argotConfig.algorithm, argotConfig.audience(req.body.argot, req));
+            updateUserAndSend(req, res, user, cipher, token, argot);
+        } else {
+            res.status(401).send(errMsg.wrongPassword);
+        }
+    });
+}
 
-                findUser({
-                    cipher: cipher
-                }, res, function (user) {
-                    // authorization success.
-                    var token = jwtSign(user, jwtConfig.audience(req));
-                    var argot = encrypt.randomBytes(64, 'utf8');
-                    var cipher = encrypt.hash(argotConfig.algorithm, argotConfig.audience(argot, req));
+function loginByArgot(req, res) {
+    var cipher = encrypt.hash(ARGOT.algorithm, ARGOT.audience(req.body.argot, req));
 
-                    updateUser(req, res, user, cipher, function () {
-                        send(res, token, argot, user);
-                    });
-                });
-            }
+    findUser({
+        cipher: cipher
+    }, res, function (user) {
+        // authorization success.
+        var token = signJwt(user, JWT.audience(req));
+        var argot = encrypt.randomBytes(64, 'utf8');
+        var cipher = encrypt.hash(ARGOT.algorithm, ARGOT.audience(argot, req));
 
-            function jwtSign(user, audience) {
-                return jwt.sign(getUserProfile(user), jwtConfig.secret, {
-                    algorithm: jwtConfig.algorithm,
-                    issuer: jwtConfig.issuer,
-                    audience: audience,
-                    expiresInMinutes: jwtConfig.expiresInMinutes
-                });
-            }
+        updateUserAndSend(req, res, user, cipher, token, argot);
+    });
+}
 
-            function findUser(criteria, res, fn) {
-                User
-                    .find(criteria)
-                    .populate({
-                        path: 'role',
-                        select: '_id name privilege note'
-                    })
-                    .exec()
-                    .then(function (docs) {
-                        if (docs.length === 0) {
-                            res.status(401).send(config.ERR_MSG.nonexistentUser);
-                        } else if (docs.length === 1) {
-                            fn(docs[0]);
-                        } else {
-                            res.status(500).send(config.ERR_MSG.unknownErr);
-                        }
-                    });
-            }
+var response = {
+    'GET': function (req, res) {
+        res.send(['Hi']);
+    },
+    'POST': function (req, res) {
+        if (req.body.argot) {
+            loginByArgot(req, res);
+        } else {
+            loginByAccount(req, res);
+        }
+    },
+    'PUT': function (req, res, next) {
 
-            function updateUser(req, res, user, cipher, fn) {
-                User.update({
-                    _id: user._id
-                }, {
-                    clientIp: req.ip,
-                    loginAt: Date.now(),
-                    cipher: cipher
-                }, function (err, numberAffected, raw) {
-                    fn();
-                });
-            }
+    },
+    'DELETE': function (req, res, next) {
 
-            function getUserProfile(user) {
-                return {
-                    _id: user._id,
-                    username: user.username,
-                    email: user.email,
-                    clientIp: user.clientIp,
-                    createAt: user.createAt,
-                    loginAt: user.loginAt,
-                    role: user.role
-                };
-            }
-
-            function send(res, token, argot, user) {
-                res.send({
-                    token: token,
-                    user: getUserProfile(user),
-                    argot: argot
-                });
-            }
-        };
     }
-);
+};
+
+module.exports = function (opt) {
+
+    return function (req, res, next) {
+        if (response[req.method]) {
+            response[req.method](req, res, next);
+        }
+    };
+};
