@@ -7,6 +7,7 @@ var config = require('./config'),
     http = require('http'),
     express = require('express'),// Web application framework for node.
     bodyParser = require('body-parser'), // Node.js body parsing middleware.
+    multer = require('multer'),// for parsing multipart/form-data.
     morgan = require('morgan'), // Logging middleware for node.js http apps.
     compression = require('compression'), // Node.js compression middleware.
     errorhandler = require('errorhandler'),// Create new middleware to handle errors and respond with content negotiation.
@@ -57,7 +58,10 @@ if (config.COMPRESSION) {
 
 app.use(morgan(config.MORGAN));
 
-app.use(config.API_BASE, bodyParser.json(), router);
+app.use(config.API_BASE, bodyParser.json()); // for parsing application/json
+app.use(config.API_BASE, bodyParser.urlencoded({extended: true})); // for parsing application/x-www-form-urlencoded
+app.use(multer()); // for parsing multipart/form-data
+app.use(config.API_BASE, router);
 
 app.use(clientServer({
     viewExts: viewExts,

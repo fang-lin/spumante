@@ -5,31 +5,23 @@
 
 
 var encrypt = require('../util/encrypt'),
-    jwt = require('jsonwebtoken');
+    jwt = require('jsonwebtoken'),
+    expressJwt = require('express-jwt'); // Middleware that validates JsonWebTokens and set req.user.;
 
 var User = require('../models/User'),
     errMsg = require('../util/errMsg'),
     config = require('../../config');
 
-var logger = require('log4js').getLogger('authorization'); // TRACE, DEBUG, INFO, WARN, ERROR, FATAL
+var logger = require('log4js').getLogger('authorization');
 logger.setLevel(config.LOGGER);
 
 var JWT = config.JWT;
 var ARGOT = config.ARGOT;
 
-//function updateUser(req, res, user, cipher, fn) {
-//    User.update({
-//        _id: user._id
-//    }, {
-//        clientIp: req.ip,
-//        loginAt: Date.now(),
-//        cipher: cipher
-//    }, function (err, numberAffected, raw) {
-//        logger.error(err);
-//        fn();
-//    });
-//}
-
+var options = {
+    secret: JWT.secret,
+    issuer: JWT.issuer
+};
 
 function updateUserAndSend(req, res, user, cipher, token, argot) {
     User.update({
@@ -53,14 +45,6 @@ function updateUserAndSend(req, res, user, cipher, token, argot) {
         }
     });
 }
-
-//function send(res, token, argot, user) {
-//    res.send({
-//        token: token,
-//        user: userFields(user),
-//        argot: argot
-//    });
-//}
 
 function userFields(user) {
     return {
@@ -121,7 +105,7 @@ function loginByAccount(req, res) {
 
             if (body.memorization) {
                 argot = encrypt.randomBytes(64, 'utf8');
-                cipher = encrypt.hash(argotConfig.algorithm, argotConfig.audience(argot, req));
+                cipher = encrypt.hash(ARGOT.algorithm, ARGOT.audience(argot, req));
             }
 
             updateUserAndSend(req, res, user, cipher, token, argot);
@@ -147,8 +131,9 @@ function loginByArgot(req, res) {
 }
 
 var response = {
-    'GET': function (req, res) {
-        res.send(['Hi']);
+    'GET': function (req, res, next) {
+        options.audience = JWT.audience(req);
+        return expressJwt(options);
     },
     'POST': function (req, res) {
         if (req.body.argot) {

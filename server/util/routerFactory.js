@@ -9,29 +9,29 @@ function Router(router) {
     this._router = router;
 }
 
-//Router.prototype.alls = [];
-//Router.prototype.injects = {};
-//
-//Router.prototype.all = function (fn) {
-//    this.alls.push(fn);
-//    return this;
-//};
+Router.prototype.alls = [];
+Router.prototype.injects = {};
 
-//Router.prototype.when = function (path, opt) {
-//    var router = this._router.route(path);
-//    _.extend(router, this.injects);
-//
-//    this.alls.forEach(function (fn) {
-//        fn(router, route);
-//    });
-//    opt.use(router = this._router.route(path));
-//    return this;
-//};
+Router.prototype.all = function (fn) {
+    this.alls.push(fn);
+    return this;
+};
 
-//Router.prototype.inject = function (key, value) {
-//    this.injects[key] = value;
-//    return this;
-//};
+Router.prototype.when = function (path, opt) {
+    var router = this._router.route(path);
+    _.extend(router, this.injects);
+
+    this.alls.forEach(function (fn) {
+        fn(router, route);
+    });
+    opt.use(router = this._router.route(path));
+    return this;
+};
+
+Router.prototype.inject = function (key, value) {
+    this.injects[key] = value;
+    return this;
+};
 
 //    Router.prototype.inject = function (err, res, callback) {
 //        if (err) {

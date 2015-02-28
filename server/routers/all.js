@@ -5,9 +5,10 @@
  */
 
 var express = require('express'),
-    expressJwt = require('express-jwt'); // Middleware that validates JsonWebTokens and set req.user.
+    expressJwt = require('express-jwt');
 
 var routerFactory = require('../util/routerFactory'),
+    errMsg = require('../util/errMsg'),
     authorization = require('./authorization'),
 //register = require('server/routers/register'),
     post = require('./post'),
@@ -32,7 +33,7 @@ var routerFactory = require('../util/routerFactory'),
 //roles = require('server/routers/roles'),
 //rolesCount = require('server/routers/rolesCount'),
 //setting = require('server/routers/setting'),
-//settings = require('server/routers/settings'),
+    settings = require('./settings'),
 //settingsCount = require('server/routers/settingsCount'),
     config = require('../../config');
 
@@ -54,10 +55,34 @@ logger.setLevel(config.LOGGER);
 //        use: post
 //    });
 
+var JWT = config.JWT;
+var ARGOT = config.ARGOT;
+
+var options = {
+    secret: JWT.secret,
+    issuer: JWT.issuer
+};
+
 var router = express.Router();
 
+function token(req, res, next) {
+
+    options.audience = JWT.audience(req);
+    next();
+}
+
 router.use('/authorization', authorization());
-router.use('/post/:id?', authorization(), post());
+router.use('/post/:id?', token, expressJwt(options), post());
+router.use('/post/:id?', token, post());
+router.use('/settings/:scopes/:skip?/:limit?', token, expressJwt(options), function (err, req, res, next) {
+    if (err) {
+        logger.warn(err);
+        res.status(err.status).send({code: err.code, message: err.message,});
+    } else {
+        next();
+    }
+}, settings());
+
 
 //routerProvider(expressRouter)
 //    .inject('cap', function (err, res, cb) {
