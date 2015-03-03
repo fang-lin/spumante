@@ -3,7 +3,6 @@
  * Author: isaac.fang@grapecity.com
  */
 
-
 var encrypt = require('../util/encrypt'),
     jwt = require('jsonwebtoken'),
     expressJwt = require('express-jwt'); // Middleware that validates JsonWebTokens and set req.user.;
@@ -33,9 +32,9 @@ function updateUserAndSend(req, res, user, cipher, token, argot) {
     }, function (err, numberAffected, raw) {
         if (err) {
             logger.error(err);
-            res.status(500).send(errMsg.unknownErr);
+            res.status(500).json(errMsg.unknownErr);
         } else if (numberAffected === 1) {
-            res.send({
+            res.json({
                 token: token,
                 user: userFields(user),
                 argot: argot
@@ -81,8 +80,8 @@ function findUser(criteria, res, cb) {
         });
 }
 
-function signJwt(user, audience) {
-    return jwt.sign(userFields(user), JWT.secret, {
+function signJwt(payload, audience) {
+    return jwt.sign(payload, JWT.secret, {
         algorithm: JWT.algorithm,
         issuer: JWT.issuer,
         audience: audience,
@@ -100,7 +99,7 @@ function loginByAccount(req, res) {
 
         if (user.password === password) {
             // authorization success.
-            var token = signJwt(user, JWT.audience(req));
+            var token = signJwt(userFields(user), JWT.audience(req));
             var argot = null, cipher = null;
 
             if (body.memorization) {
@@ -122,7 +121,7 @@ function loginByArgot(req, res) {
         cipher: cipher
     }, res, function (user) {
         // authorization success.
-        var token = signJwt(user, JWT.audience(req));
+        var token = signJwt(userFields(user), JWT.audience(req));
         var argot = encrypt.randomBytes(64, 'utf8');
         var cipher = encrypt.hash(ARGOT.algorithm, ARGOT.audience(argot, req));
 
@@ -130,31 +129,25 @@ function loginByArgot(req, res) {
     });
 }
 
-var response = {
-    'GET': function (req, res, next) {
-        options.audience = JWT.audience(req);
-        return expressJwt(options);
-    },
-    'POST': function (req, res) {
-        if (req.body.argot) {
-            loginByArgot(req, res);
-        } else {
-            loginByAccount(req, res);
-        }
-    },
-    'PUT': function (req, res, next) {
+module.exports = function (router) {
 
-    },
-    'DELETE': function (req, res, next) {
-
-    }
-};
-
-module.exports = function (opt) {
-
-    return function (req, res, next) {
-        if (response[req.method]) {
-            response[req.method](req, res, next);
-        }
-    };
+    router
+        .get(function (req, res, next) {
+            //options.audience = JWT.audience(req);
+            //return expressJwt(options);
+            res.json({});
+        })
+        .post(function (req, res, next) {
+            if (req.body.argot) {
+                loginByArgot(req, res);
+            } else {
+                loginByAccount(req, res);
+            }
+        })
+        .put(function (req, res, next) {
+            next();
+        })
+        .delete(function (req, res, next) {
+            next();
+        });
 };

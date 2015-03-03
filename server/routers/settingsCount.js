@@ -2,21 +2,21 @@
  * Copyright 2006-2014 GrapeCity inc
  * Author: isaac.fang@grapecity.com
  */
+var Setting = require('../models/Setting'),
+    errMsg = require('../util/errMsg'),
+    config = require('../../config');
 
-define([
-    'server/models/Setting'
-], function (Setting) {
-    'use strict';
+var logger = require('log4js').getLogger('settingCount');
+logger.setLevel(config.LOGGER);
 
-    return function (route) {
-        route
-            .get(function (req, res, next) {
-                Setting
-                    .count()
-                    .exec()
-                    .then(function (docs) {
-                        res.send({count: docs});
-                    });
-            });
-    };
-});
+module.exports = function (route) {
+    route
+        .get(function (req, res, next) {
+            Setting
+                .count()
+                .exec()
+                .then(function (docs) {
+                    res.send({count: docs});
+                });
+        });
+};

@@ -3,28 +3,29 @@
  * Author: isaac.fang@grapecity.com
  */
 
-define([
-    'server/models/Comment'
-], function (Comment) {
-    'use strict';
+var Comment = require('../models/Comment'),
+    errMsg = require('../util/errMsg'),
+    config = require('../../config');
 
-    return function (route) {
-        route
-            .get(function (req, res, next) {
-                var postId = req.params['postId'];
-                var criteria = {};
+var logger = require('log4js').getLogger('commentComment');
+logger.setLevel(config.LOGGER);
 
-                if (postId !== '-') {
-                    criteria = {post: postId};
-                }
+module.exports = function (route) {
+    route
+        .get(function (req, res, next) {
+            var postId = req.params['postId'];
+            var criteria = {};
 
-                Comment
-                    .find(criteria)
-                    .count()
-                    .exec()
-                    .then(function (count) {
-                        res.send({count: count});
-                    });
-            });
-    };
-});
+            if (postId !== '-') {
+                criteria = {post: postId};
+            }
+
+            Comment
+                .find(criteria)
+                .count()
+                .exec()
+                .then(function (count) {
+                    res.send({count: count});
+                });
+        });
+};

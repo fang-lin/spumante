@@ -6,27 +6,22 @@
 
 module.exports = {
     nonexistentUser: {
-        code: 'not_authenticated',
-        msg: 'Nonexistent User'
+        message: 'Nonexistent User'
     },
     wrongPassword: {
-        code: 'not_authenticated',
-        msg: 'Wrong Password'
+        message: 'Wrong Password'
     },
     nonexistentArgot: {
-        code: 'not_authenticated',
-        msg: 'Nonexistent Argot'
+        message: 'Nonexistent Argot'
     },
     wrongVerification: {
-        code: 'wrong_verification',
-        msg: 'Wrong Verification'
+        message: 'Wrong Verification'
     },
     permissionDenied: {
-        code: 'permission_denied',
-        msg: 'Permission Denied'
+        message: 'Permission Denied'
     },
     unknownErr: {
         code: ' unknown',
-        msg: 'Unknown Error'
+        message: 'Unknown Error'
     }
 };

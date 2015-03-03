@@ -10,53 +10,38 @@ var express = require('express'),
 var routerFactory = require('../util/routerFactory'),
     errMsg = require('../util/errMsg'),
     authorization = require('./authorization'),
-//register = require('server/routers/register'),
+    register = require('./register'),
     post = require('./post'),
-//posts = require('server/routers/posts'),
-//postsCount = require('server/routers/postsCount'),
-//draft = require('server/routers/draft'),
-//drafts = require('server/routers/drafts'),
-//draftsCount = require('server/routers/draftsCount'),
-//tag = require('server/routers/tag'),
-//tags = require('server/routers/tags'),
-//tagsCount = require('server/routers/tagsCount'),
-//comment = require('server/routers/comment'),
-//comments = require('server/routers/comments'),
-//commentsCount = require('server/routers/commentsCount'),
-//user = require('server/routers/user'),
-//users = require('server/routers/users'),
-//usersCount = require('server/routers/usersCount'),
-//visitor = require('server/routers/visitor'),
-//visitors = require('server/routers/visitors'),
-//visitorsCount = require('server/routers/visitorsCount'),
-//role = require('server/routers/role'),
-//roles = require('server/routers/roles'),
-//rolesCount = require('server/routers/rolesCount'),
-//setting = require('server/routers/setting'),
+    posts = require('./posts'),
+    postsCount = require('./postsCount'),
+    draft = require('./draft'),
+    drafts = require('./drafts'),
+    draftsCount = require('./draftsCount'),
+    tag = require('./tag'),
+    tags = require('./tags'),
+    tagsCount = require('./tagsCount'),
+    comment = require('./comment'),
+    comments = require('./comments'),
+    commentsCount = require('./commentsCount'),
+    user = require('./user'),
+    users = require('./users'),
+    usersCount = require('./usersCount'),
+//visitor = require('./visitor'),
+//visitors = require('./visitors'),
+//visitorsCount = require('./visitorsCount'),
+    role = require('./role'),
+    roles = require('./roles'),
+    rolesCount = require('./rolesCount'),
+    setting = require('./setting'),
     settings = require('./settings'),
-//settingsCount = require('server/routers/settingsCount'),
-    config = require('../../config');
+    settingsCount = require('./settingsCount'),
+    config = require('../../config'),
+    errMsg = require('../util/errMsg');
 
 var logger = require('log4js').getLogger('router'); // TRACE, DEBUG, INFO, WARN, ERROR, FATAL
 logger.setLevel(config.LOGGER);
 
-//var options = {
-//    secret: config.jwt.secret,
-//    issuer: config.jwt.issuer
-//};
-
-//var router = routerFactory(express.Router());
-//
-//router
-//    .when('/authorization', {
-//        use: authorization
-//    })
-//    .when('/authorization', {
-//        use: post
-//    });
-
 var JWT = config.JWT;
-var ARGOT = config.ARGOT;
 
 var options = {
     secret: JWT.secret,
@@ -65,193 +50,174 @@ var options = {
 
 var router = express.Router();
 
-function token(req, res, next) {
-
-    options.audience = JWT.audience(req);
-    next();
-}
-
-router.use('/authorization', authorization());
-router.use('/post/:id?', token, expressJwt(options), post());
-router.use('/post/:id?', token, post());
-router.use('/settings/:scopes/:skip?/:limit?', token, expressJwt(options), function (err, req, res, next) {
-    if (err) {
-        logger.warn(err);
-        res.status(err.status).send({code: err.code, message: err.message,});
-    } else {
-        next();
-    }
-}, settings());
-
-
-//routerProvider(expressRouter)
-//    .inject('cap', function (err, res, cb) {
-//        if (err) {
-//            logger.error(err);
-//            res.status(500).send({
-//                code: err.code,
-//                msg: err.message
-//            });
-//        } else {
-//            cb(logger);
-//        }
-//    })
-//    .all(function (router, route) {
-//        var delay = config.delay;
-//        if (delay) {
-//            router
-//                .all(function (req, res, next) {
-//                    setTimeout(function () {
-//                        next();
-//                    }, delay());
-//                });
-//        }
-//    })
-//    .all(function (router, route) {
-//        console.log('asdasd');
-//        //if (route.requireJwt) {
-//        //    router
-//        //        .all(function (req, res, next) {
-//        //            options.audience = config.jwt.audience(req);
-//        //            next();
-//        //        })
-//        //        .all(expressJwt(options))
-//        //        .all(function (err, req, res, next) {
-//        //            if (err) {
-//        //                res.status(err.status).send({
-//        //                    code: err.code,
-//        //                    msg: err.message
-//        //                });
-//        //            }
-//        //        })
-//        //        .all(function (req, res, next) {
-//        //            if (req.user.role) {
-//        //                next();
-//        //            } else {
-//        //                var visitorAllow = route.visitorAllow;
-//        //                var method = req.method.toLowerCase();
-//        //
-//        //                if (visitorAllow && visitorAllow.indexOf(method) !== -1) {
-//        //                    next();
-//        //                } else {
-//        //                    res.status(401).send(config.ERR_MSG.permissionDenied);
-//        //                }
-//        //            }
-//        //        });
-//        //}
-//    });
-//    //.when('/authorization', {
-//    //    action: authorization,
-//    //    requireJwt: false
-//    //})
-//    //.when('/register', {
-//    //    action: register,
-//    //    requireJwt: false
-//    //})
-//    //.when('/post/:id?', {
-//    //    action: post,
-//    //    requireJwt: true,
-//    //    visitorAllow: ['get']
-//    //})
-//    //.when('/posts/count', {
-//    //    action: postsCount,
-//    //    requireJwt: true,
-//    //    visitorAllow: ['get']
-//    //})
-//    //.when('/posts/:skip?/:limit?', {
-//    //    action: posts,
-//    //    requireJwt: true,
-//    //    visitorAllow: ['get']
-//    //})
-//    //.when('/draft/:id?', {
-//    //    action: draft,
-//    //    requireJwt: true,
-//    //    visitorAllow: false
-//    //})
-//    //.when('/drafts/:postId/count', {
-//    //    action: draftsCount,
-//    //    requireJwt: true,
-//    //    visitorAllow: false
-//    //})
-//    //.when('/drafts/:postId', {
-//    //    action: drafts,
-//    //    requireJwt: true,
-//    //    visitorAllow: false
-//    //})
-//    //.when('/tag/:id?', {
-//    //    action: tag,
-//    //    requireJwt: true,
-//    //    visitorAllow: ['get']
-//    //})
-//    //.when('/tags/count', {
-//    //    action: tagsCount,
-//    //    requireJwt: true,
-//    //    visitorAllow: ['get']
-//    //})
-//    //.when('/tags/:skip?/:limit?', {
-//    //    action: tags,
-//    //    requireJwt: true,
-//    //    visitorAllow: ['get']
-//    //})
-//    //.when('/comment/:id?', {
-//    //    action: comment,
-//    //    requireJwt: true,
-//    //    visitorAllow: ['get', 'post', 'put', 'delete']
-//    //})
-//    //.when('/comments/:postId/count', {
-//    //    action: commentsCount,
-//    //    requireJwt: true,
-//    //    visitorAllow: ['get']
-//    //})
-//    //.when('/comments/:postId/:skip?/:limit?', {
-//    //    action: comments,
-//    //    requireJwt: true,
-//    //    visitorAllow: ['get']
-//    //})
-//    //.when('/user/:id?', {
-//    //    action: user,
-//    //    requireJwt: true,
-//    //    visitorAllow: false
-//    //})
-//    //.when('/users/count', {
-//    //    action: usersCount,
-//    //    requireJwt: true,
-//    //    visitorAllow: false
-//    //})
-//    //.when('/users/:skip?/:limit?', {
-//    //    action: users,
-//    //    requireJwt: true,
-//    //    visitorAllow: false
-//    //})
-//    //.when('/role/:id?', {
-//    //    action: role,
-//    //    requireJwt: true,
-//    //    visitorAllow: false
-//    //})
-//    //.when('/roles/Count', {
-//    //    action: rolesCount,
-//    //    requireJwt: true,
-//    //    visitorAllow: false
-//    //})
-//    //.when('/roles/:skip?/:limit?', {
-//    //    action: roles,
-//    //    requireJwt: true,
-//    //    visitorAllow: false
-//    //})
-//    //.when('/setting/:id?', {
-//    //    action: setting,
-//    //    requireJwt: true,
-//    //    visitorAllow: false
-//    //})
-//    //.when('/settings/count', {
-//    //    action: settingsCount,
-//    //    requireJwt: true,
-//    //    visitorAllow: false
-//    //})
-//    //.when('/settings/:scopes/:skip?/:limit?', {
-//    //    action: settings,
-//    //    requireJwt: true,
-//    //    visitorAllow: ['get']
-//    //});
+routerFactory(router)
+    .all(function (router, opt) {
+        if (!!opt.jwtRequired) {
+            router
+                .all(function (req, res, next) {
+                    options.audience = config.JWT.audience(req);
+                    next();
+                })
+                .all(expressJwt(options))
+                .all(function (err, req, res, next) {
+                    if (err) {
+                        res.status(err.status).json({
+                            message: err.message
+                        });
+                    } else {
+                        next();
+                    }
+                })
+                .all(function (req, res, next) {
+                    if (!!req.user.role) {
+                        next();
+                    } else {
+                        var visitorAllow = opt.visitorAllow,
+                            method = req.method.toLowerCase();
+                        if (visitorAllow && visitorAllow.indexOf(method) !== -1) {
+                            next();
+                        } else {
+                            res.status(401).json(errMsg.permissionDenied);
+                        }
+                    }
+                });
+        }
+    })
+    .when({
+        path: '/authorization',
+        action: authorization,
+        jwtRequired: false
+    })
+    .when({
+        path: '/register',
+        action: register,
+        jwtRequired: false
+    })
+    .when({
+        path: '/post/:id?',
+        action: post,
+        jwtRequired: true,
+        visitorAllow: ['get']
+    })
+    .when({
+        path: '/posts/count',
+        action: postsCount,
+        jwtRequired: true,
+        visitorAllow: ['get']
+    })
+    .when({
+        path: '/posts/:skip?/:limit?',
+        action: posts,
+        jwtRequired: true,
+        visitorAllow: ['get']
+    })
+    .when({
+        path: '/draft/:id?',
+        action: draft,
+        jwtRequired: true,
+        visitorAllow: false
+    })
+    .when({
+        path: '/drafts/:postId/count',
+        action: draftsCount,
+        jwtRequired: true,
+        visitorAllow: false
+    })
+    .when({
+        path: '/drafts/:postId',
+        action: drafts,
+        jwtRequired: true,
+        visitorAllow: false
+    })
+    .when({
+        path: '/tag/:id?',
+        action: tag,
+        jwtRequired: true,
+        visitorAllow: ['get']
+    })
+    .when({
+        path: '/tags/count',
+        action: tagsCount,
+        jwtRequired: true,
+        visitorAllow: ['get']
+    })
+    .when({
+        path: '/tags/:skip?/:limit?',
+        action: tags,
+        jwtRequired: true,
+        visitorAllow: ['get']
+    })
+    .when({
+        path: '/comment/:id?',
+        action: comment,
+        jwtRequired: true,
+        visitorAllow: ['get', 'post', 'put', 'delete']
+    })
+    .when({
+        path: '/comments/:postId/count',
+        action: commentsCount,
+        jwtRequired: true,
+        visitorAllow: ['get']
+    })
+    .when({
+        path: '/comments/:postId/:skip?/:limit?',
+        action: comments,
+        jwtRequired: true,
+        visitorAllow: ['get']
+    })
+    .when({
+        path: '/user/:id?',
+        action: user,
+        jwtRequired: true,
+        visitorAllow: false
+    })
+    .when({
+        path: '/users/count',
+        action: usersCount,
+        jwtRequired: true,
+        visitorAllow: false
+    })
+    .when({
+        path: '/users/:skip?/:limit?',
+        action: users,
+        jwtRequired: true,
+        visitorAllow: false
+    })
+    .when({
+        path: '/role/:id?',
+        action: role,
+        jwtRequired: true,
+        visitorAllow: false
+    })
+    .when({
+        path: '/roles/Count',
+        action: rolesCount,
+        jwtRequired: true,
+        visitorAllow: false
+    })
+    .when({
+        path: '/roles/:skip?/:limit?',
+        action: roles,
+        jwtRequired: true,
+        visitorAllow: false
+    })
+    .when({
+        path: '/setting/:id?',
+        action: setting,
+        jwtRequired: true,
+        visitorAllow: false
+    })
+    .when({
+        path: '/settings/count',
+        action: settingsCount,
+        jwtRequired: true,
+        visitorAllow: false
+    })
+    .when({
+        path: '/settings/:scopes/:skip?/:limit?',
+        action: settings,
+        jwtRequired: true,
+        visitorAllow: ['get']
+    });
 
 module.exports = router;

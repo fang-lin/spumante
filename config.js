@@ -68,11 +68,10 @@ if (NODE_ENV && CONFIGS[NODE_ENV]) {
 var JWT = {
     secret: new Buffer('YOUR_CLIENT_SECRET', 'base64'),
     issuer: 'YOUR_ISSUER',
-    expiresInMinutes: 0,
+    expiresInMinutes: 1,
     audience: function (req) {
         return req.headers['accept-language'] + ' ' + req.headers['user-agent'];
     },
-    argotExpiresInMinutes: 0,
     // HS256    HMAC using SHA-256 hash algorithm
     // HS384    HMAC using SHA-384 hash algorithm
     // HS512    HMAC using SHA-512 hash algorithm
