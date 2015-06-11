@@ -9,7 +9,7 @@ var CONFIGS = {
         'MORGAN': 'dev', // combined, common, dev, short, tiny
         'LOGGER': 'TRACE', // TRACE, DEBUG, INFO, WARN, ERROR, FATAL
         'CLIENT_DIR': 'client',
-        'PORT': 8008,
+        'PORT': 8080,
         'MONGODB_LINK': 'mongodb://localhost/oglen-db',
         'API_BASE': '/api',
         'ERRORHANDLER': true,

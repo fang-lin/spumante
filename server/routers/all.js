@@ -55,32 +55,34 @@ routerFactory(router)
         if (!!opt.jwtRequired) {
             router
                 .all(function (req, res, next) {
-                    options.audience = config.JWT.audience(req);
+                    //options.audience = config.JWT.audience(req);
                     next();
-                })
-                .all(expressJwt(options))
-                .all(function (err, req, res, next) {
-                    if (err) {
-                        res.status(err.status).json({
-                            message: err.message
-                        });
-                    } else {
-                        next();
-                    }
-                })
-                .all(function (req, res, next) {
-                    if (!!req.user.role) {
-                        next();
-                    } else {
-                        var visitorAllow = opt.visitorAllow,
-                            method = req.method.toLowerCase();
-                        if (visitorAllow && visitorAllow.indexOf(method) !== -1) {
-                            next();
-                        } else {
-                            res.status(401).json(errMsg.permissionDenied);
-                        }
-                    }
                 });
+                //.all(expressJwt(options))
+                //.all(function (err, req, res, next) {
+                //
+                //    res.send(err);
+                //    if (err) {
+                //        res.status(err.status).json({
+                //            message: err.message
+                //        });
+                //    } else {
+                //        next();
+                //    }
+                //})
+                //.all(function (req, res, next) {
+                //    if (!!req.user.role) {
+                //        next();
+                //    } else {
+                //        var visitorAllow = opt.visitorAllow,
+                //            method = req.method.toLowerCase();
+                //        if (visitorAllow && visitorAllow.indexOf(method) !== -1) {
+                //            next();
+                //        } else {
+                //            res.status(401).json(errMsg.permissionDenied);
+                //        }
+                //    }
+                //});
         }
     })
     .when({

@@ -59,7 +59,7 @@ if (config.COMPRESSION) {
 app.use(morgan(config.MORGAN));
 
 app.use(config.API_BASE, bodyParser.json()); // for parsing application/json
-app.use(config.API_BASE, bodyParser.urlencoded({extended: true})); // for parsing application/x-www-form-urlencoded
+app.use(config.API_BASE, bodyParser.urlencoded({extended: true})); // for parsing application/x-www-form-urlencoded+
 app.use(multer()); // for parsing multipart/form-data
 app.use(config.API_BASE, router);
 
