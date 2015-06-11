@@ -2,24 +2,23 @@
  * Copyright 2006-2014 GrapeCity inc
  * Author: isaac.fang@grapecity.com
  */
+var Comment = require('../models/Comment'),
+    errMsg = require('../util/errMsg'),
+    config = require('../../config');
 
-define([
-    'server/models/Role'
-], function (Role) {
-    'use strict';
+var logger = require('log4js').getLogger('rolesCount');
+logger.setLevel(config.LOGGER);
 
-    return function (route) {
-        route
-            .get(function (req, res, next) {
-                Role
-                    .count()
-                    .exec()
-                    .then(function (docs) {
-                        res.send({
-                            count: docs
-                        });
+module.exports = function (route) {
+    route
+        .get(function (req, res, next) {
+            Role
+                .count()
+                .exec()
+                .then(function (docs) {
+                    res.send({
+                        count: docs
                     });
-            });
-    };
-});
-
+                });
+        });
+};

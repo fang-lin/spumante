@@ -41,7 +41,7 @@ gulp.task('lint', function () {
 // endregion lint
 // region less
 
-gulp.task('less:root', ['bower'], function (done) {
+gulp.task('less:root', ['bower'], function () {
     return gulp.src('client/root/less/*.less')
         .pipe(less())
         .on('error', function (err) {
@@ -50,7 +50,7 @@ gulp.task('less:root', ['bower'], function (done) {
         .pipe(gulp.dest('client/root/css/'));
 });
 
-gulp.task('less:blog', ['bower'], function (done) {
+gulp.task('less:blog', ['bower'], function () {
     return gulp.src('client/blog/less/*.less')
         .pipe(less())
         .on('error', function (err) {

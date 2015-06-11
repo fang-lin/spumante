@@ -9,7 +9,7 @@ var CONFIGS = {
         'MORGAN': 'dev', // combined, common, dev, short, tiny
         'LOGGER': 'TRACE', // TRACE, DEBUG, INFO, WARN, ERROR, FATAL
         'CLIENT_DIR': 'client',
-        'PORT': 8008,
+        'PORT': 8080,
         'MONGODB_LINK': 'mongodb://localhost/oglen-db',
         'API_BASE': '/api',
         'ERRORHANDLER': true,
@@ -65,71 +65,35 @@ if (NODE_ENV && CONFIGS[NODE_ENV]) {
     CONFIG = CONFIGS[NODE_ENV];
 }
 
+var JWT = {
+    secret: new Buffer('YOUR_CLIENT_SECRET', 'base64'),
+    issuer: 'YOUR_ISSUER',
+    expiresInMinutes: 1,
+    audience: function (req) {
+        return req.headers['accept-language'] + ' ' + req.headers['user-agent'];
+    },
+    // HS256    HMAC using SHA-256 hash algorithm
+    // HS384    HMAC using SHA-384 hash algorithm
+    // HS512    HMAC using SHA-512 hash algorithm
+    // RS256    RSASSA using SHA-256 hash algorithm
+    // RS384    RSASSA using SHA-384 hash algorithm
+    // RS512    RSASSA using SHA-512 hash algorithm
+    // ES256    ECDSA using P-256 curve and SHA-256 hash algorithm
+    // ES384    ECDSA using P-384 curve and SHA-384 hash algorithm
+    // ES512    ECDSA using P-521 curve and SHA-512 hash algorithm
+    // none     No digital signature or MAC value included
+    algorithm: 'HS256'
+};
+
+var ARGOT = {
+    audience: function (argot, req) {
+        return argot + JWT.secret + JWT.issuer + JWT.audience(req);
+    },
+    expiresInMinutes: 0,
+    algorithm: 'sha512'
+};
+
+CONFIG.JWT = JWT;
+CONFIG.ARGOT = ARGOT;
+
 module.exports = CONFIG;
-
-
-//    // json web token
-//    var jwt = {
-//        secret: new Buffer('YOUR_CLIENT_SECRET', 'base64'),
-//        issuer: 'YOUR_ISSUER',
-//        expiresInMinutes: 0,
-//        audience: function (req) {
-//            var header = req.headers;
-//            return header['accept-language'] + ' ' + header['user-agent'];
-//        },
-//        argotExpiresInMinutes: 0,
-//        algorithm: 'HS256'
-//    };
-//
-//    // argot
-//    var argot = {
-//        audience: function (argot, req) {
-//            return argot + jwt.secret + jwt.issuer + jwt.audience(req);
-//        },
-//        expiresInMinutes: 0,
-//        algorithm: 'sha512'
-//    };
-//
-//    // api messages
-//    var ERR_MSG = {
-//        nonexistentUser: {
-//            code: 'not_authenticated',
-//            msg: 'Nonexistent User'
-//        },
-//        wrongPassword: {
-//            code: 'not_authenticated',
-//            msg: 'Wrong Password'
-//        },
-//        nonexistentArgot: {
-//            code: 'not_authenticated',
-//            msg: 'Nonexistent Argot'
-//        },
-//        wrongVerification: {
-//            code: 'wrong_verification',
-//            msg: 'Wrong Verification'
-//        },
-//        permissionDenied: {
-//            code: 'permission_denied',
-//            msg: 'Permission Denied'
-//        },
-//        unknownErr: {
-//            code: ' unknown',
-//            msg: 'Unknown Error'
-//        }
-//    };
-//
-//    return {
-//        ENV: ENV,
-//        logger: logger(),
-//        morgan: morgan(),
-//        clientPath: clientPath(),
-//        port: port(),
-//        mongooseLink: mongooseLink(),
-//        jwt: jwt,
-//        argot: argot,
-//        delay: false,
-////        delay: function () {
-////            return _.random(800, 1000);
-////        },
-//        ERR_MSG: ERR_MSG
-//    };
